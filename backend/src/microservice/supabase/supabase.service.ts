@@ -34,4 +34,13 @@ export class SupabaseService implements OnModuleInit {
         const link = await this.supabase.storage.from('Images').getPublicUrl(data.path).data.publicUrl;
         return link;
     }
+
+    async deleteImage(fileName) {
+        // Deletes file from storage
+        const { error } = await this.supabase.storage.from('Images').remove([fileName]);
+        if (error) {
+            throw new UnprocessableEntityException(error);
+        }
+        return { message: `Successfully Removed File ${fileName}` };
+    }
 }
