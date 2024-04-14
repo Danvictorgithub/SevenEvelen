@@ -7,12 +7,12 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) { }
   async create(createUserDto: CreateUserDto) {
-    const userExist = await this.prisma.user.findUnique({ where: { username: createUserDto.username.toLowerCase() } });
+    const userExist = await this.prisma.user.findUnique({ where: { email: createUserDto.email.toLowerCase() } });
     if (userExist) {
       throw new BadRequestException("User Already Exist");
     }
     const password = await bcrypt.hash(createUserDto.password, parseInt(process.env.SECRET_KEY));
-    return this.prisma.user.create({ data: { username: createUserDto.username.toLowerCase(), password } });
+    return this.prisma.user.create({ data: { email: createUserDto.email.toLowerCase(), password } });
   }
 
   findAll() {

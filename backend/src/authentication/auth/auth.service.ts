@@ -11,8 +11,8 @@ export class AuthService {
         private jwtService: JwtService,
     ) { }
     // Authenticates email and Password
-    async validateUser(username: string, password: string): Promise<any> {
-        const user = await this.prisma.user.findUnique({ where: { username } });
+    async validateUser(email: string, password: string): Promise<any> {
+        const user = await this.prisma.user.findUnique({ where: { email } });
         const result = (user) ? bcrypt.compareSync(password, user.password) : false;
         if (user && result) {
             const { password, ...result } = user;

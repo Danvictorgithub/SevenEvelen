@@ -9,13 +9,14 @@ import { UsersModule } from 'src/users/users.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [UsersModule, PrismaModule, PassportModule, PrismaModule, JwtModule.register({
     secret: process.env.JWT_SECRET,
     signOptions: { expiresIn: "7d" }
   })],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtService],
+  providers: [AuthService, LocalStrategy, UsersService, JwtStrategy, JwtService],
   controllers: [AuthController],
 })
 export class AuthModule { }
