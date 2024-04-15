@@ -27,7 +27,7 @@ export class AuthController {
         }
         throw new ForbiddenException();
     }
-    @Get('validate')
+    @Get()
     @UseGuards(JwtAuthGuard)
     async protected(@Request() req): Promise<any> {
         return req.user;
