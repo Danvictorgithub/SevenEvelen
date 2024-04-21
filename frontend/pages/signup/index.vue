@@ -1,3 +1,61 @@
+<script setup lang="ts">
+const { status, signUp } = useAuth();
+if (status.value == "authenticated") {
+  await navigateTo("/");
+}
+const credentials = reactive({
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+  email: "",
+  password: "",
+});
+const confirmPassword = ref("");
+const showPassword = ref(false);
+const countDown = ref(4);
+const success = ref(false);
+function startCountDown() {
+  success.value = true;
+  let intervalId = setInterval(async () => {
+    if (countDown.value > 0) {
+      countDown.value--;
+    } else {
+      clearInterval(intervalId);
+      await navigateTo("/signin");
+    }
+  }, 1000); // 1000ms = 1s
+}
+const credentialsValidate = computed(() => {
+  return {
+    firstName: credentials.firstName.length > 0,
+    lastName: credentials.firstName.length > 0,
+    phoneNumber: RegExp("\\d{10}").test(credentials.phoneNumber),
+    email: RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$").test(
+      credentials.email
+    ),
+    password: credentials.password.length >= 8,
+    confirmPassword:
+      confirmPassword.value === credentials.password &&
+      confirmPassword.value.length >= 8,
+  };
+});
+async function signup() {
+  if (
+    Object.values(credentialsValidate.value).every((value) => value === true)
+  ) {
+    try {
+      await signUp(credentials, { redirect: false });
+      startCountDown();
+    } catch (e: any) {
+      if (e.data) {
+        alert(e.data.message);
+      } else {
+        alert(e);
+      }
+    }
+  }
+}
+</script>
 <template>
   <section class="bg-white">
     <div class="flex justify-center min-h-screen">
@@ -18,7 +76,7 @@
 
           <p class="mt-4 text-gray-500">
             Let’s get you all set up so you can verify your personal account and
-            begin setting up your profile.
+            begin shopping.
           </p>
 
           <!-- <div class="mt-6">
@@ -73,8 +131,13 @@
             <div>
               <label class="block mb-2 text-sm text-gray-600">First Name</label>
               <input
+                v-model="credentials.firstName"
                 type="text"
                 placeholder="John"
+                :class="{
+                  'border-red-500': !credentialsValidate.firstName,
+                  'border-green-500': credentialsValidate.firstName,
+                }"
                 class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-green-400 :border-green-400 focus:ring-green-400 focus:outline-none focus:ring focus:ring-opacity-40"
               />
             </div>
@@ -82,6 +145,11 @@
             <div>
               <label class="block mb-2 text-sm text-gray-600">Last name</label>
               <input
+                :class="{
+                  'border-red-500': !credentialsValidate.lastName,
+                  'border-green-500': credentialsValidate.lastName,
+                }"
+                v-model="credentials.lastName"
                 type="text"
                 placeholder="Snow"
                 class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-green-400 :border-green-400 focus:ring-green-400 focus:outline-none focus:ring focus:ring-opacity-40"
@@ -93,8 +161,13 @@
                 >Phone number</label
               >
               <input
+                :class="{
+                  'border-red-500': !credentialsValidate.phoneNumber,
+                  'border-green-500': credentialsValidate.phoneNumber,
+                }"
+                v-model="credentials.phoneNumber"
                 type="text"
-                placeholder="XXX-XX-XXXX-XXX"
+                placeholder="09123456789"
                 class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-green-400 :border-green-400 focus:ring-green-400 focus:outline-none focus:ring focus:ring-opacity-40"
               />
             </div>
@@ -104,6 +177,11 @@
                 >Email address</label
               >
               <input
+                :class="{
+                  'border-red-500': !credentialsValidate.email,
+                  'border-green-500': credentialsValidate.email,
+                }"
+                v-model="credentials.email"
                 type="email"
                 placeholder="johnsnow@example.com"
                 class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-green-400 :border-green-400 focus:ring-green-400 focus:outline-none focus:ring focus:ring-opacity-40"
@@ -113,24 +191,48 @@
             <div>
               <label class="block mb-2 text-sm text-gray-600">Password</label>
               <input
-                type="password"
+                :class="{
+                  'border-red-500': !credentialsValidate.password,
+                  'border-green-500': credentialsValidate.password,
+                }"
+                v-model="credentials.password"
+                :type="showPassword ? 'text' : 'password'"
                 placeholder="Enter your password"
                 class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-green-400 :border-green-400 focus:ring-green-400 focus:outline-none focus:ring focus:ring-opacity-40"
               />
             </div>
 
-            <div>
+            <div class="relative">
               <label class="block mb-2 text-sm text-gray-600"
                 >Confirm password</label
               >
               <input
-                type="password"
+                :class="{
+                  'border-red-500': !credentialsValidate.confirmPassword,
+                  'border-green-500': credentialsValidate.confirmPassword,
+                }"
+                v-model="confirmPassword"
+                :type="showPassword ? 'text' : 'password'"
                 placeholder="Enter your password"
                 class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-green-400 :border-green-400 focus:ring-green-400 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+              <Icon
+                v-if="!showPassword"
+                @click="showPassword = !showPassword"
+                name="material-symbols:visibility-rounded"
+                class="text-gray-500 top-[42px] right-2 absolute text-2xl"
+              />
+              <Icon
+                v-else
+                @click="showPassword = !showPassword"
+                name="material-symbols:visibility-off-rounded"
+                class="text-gray-500 top-[42px] right-2 absolute text-2xl"
               />
             </div>
 
             <button
+              @click="signup"
+              type="button"
               class="flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-500 rounded-lg hover:bg-green-400 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-50"
             >
               <span>Sign Up </span>
@@ -149,6 +251,13 @@
               </svg>
             </button>
           </form>
+          <div class="p-4" v-if="success">
+            <p class="text-center">
+              <span class="text-green-600">Created an account.</span>
+              Redirecting in {{ countDown }}
+              in
+            </p>
+          </div>
         </div>
       </div>
     </div>

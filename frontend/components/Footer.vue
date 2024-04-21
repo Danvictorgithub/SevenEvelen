@@ -146,7 +146,7 @@
 
       <div>
         <p class="text-center text-gray-500">
-          © Brand 2020 - All rights reserved
+          © 7-Eleven 2024 - All rights reserved
         </p>
       </div>
     </div>

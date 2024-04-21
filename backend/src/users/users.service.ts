@@ -11,8 +11,9 @@ export class UsersService {
     if (userExist) {
       throw new BadRequestException("User Already Exist");
     }
-    const password = await bcrypt.hash(createUserDto.password, parseInt(process.env.SECRET_KEY));
-    return this.prisma.user.create({ data: { email: createUserDto.email.toLowerCase(), password } });
+    createUserDto.password = await bcrypt.hash(createUserDto.password, parseInt(process.env.SECRET_KEY));
+    createUserDto.email = createUserDto.email.toLowerCase();
+    return this.prisma.user.create({ data: createUserDto });
   }
 
   findAll() {

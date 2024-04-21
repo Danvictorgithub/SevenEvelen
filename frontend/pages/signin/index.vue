@@ -1,3 +1,24 @@
+<script setup lang="ts">
+const { status, signIn } = useAuth();
+if (status.value == "authenticated") {
+  await navigateTo("/");
+}
+const credentials = reactive({
+  email: "",
+  password: "",
+});
+async function signin() {
+  try {
+    await signIn(credentials);
+  } catch (error: any) {
+    if (error.data) {
+      alert("Invalid Email or Password");
+    } else {
+      alert("Server is not responding");
+    }
+  }
+}
+</script>
 <template>
   <div class="bg-white">
     <div class="flex justify-center h-screen">
@@ -37,6 +58,7 @@
                   >Email Address</label
                 >
                 <input
+                  v-model="credentials.email"
                   type="email"
                   name="email"
                   id="email"
@@ -58,6 +80,7 @@
                 </div>
 
                 <input
+                  v-model="credentials.password"
                   type="password"
                   name="password"
                   id="password"
@@ -68,6 +91,8 @@
 
               <div class="mt-6">
                 <button
+                  @click="signin"
+                  type="button"
                   class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-green-500 rounded-lg hover:bg-green-400 focus:outline-none focus:bg-green-400 focus:ring focus:ring-green-300 focus:ring-opacity-50"
                 >
                   Sign in
