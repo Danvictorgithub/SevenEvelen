@@ -10,11 +10,11 @@ export class SupabaseService implements OnModuleInit {
             this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
             // Perform a test query to check the validity of the Supabase key
-            // const { data, error } = await this.supabase.from('').select('*').limit(1);
+            const { data, error } = await this.supabase.from('').select('*').limit(1);
 
-            // if (error) {
-            //   throw new Error(`Error performing test query: ${error.message}`);
-            // }
+            if (error) {
+                throw new Error(`Error performing test query: ${error.message}`);
+            }
 
             console.log('Supabase Initialized');
         } catch (error) {
@@ -42,5 +42,16 @@ export class SupabaseService implements OnModuleInit {
             throw new UnprocessableEntityException(error);
         }
         return { message: `Successfully Removed File ${fileName}` };
+    }
+    isSupabaseUrl(url) {
+        const supabaseUrlPattern = /^https?:\/\/[^\/]*\.supabase\.co/;
+        return supabaseUrlPattern.test(url);
+    };
+    getFilenameFromSupabaseUrl(url) {
+        const urlObject = new URL(url);
+        const pathname = urlObject.pathname;
+        const filename = pathname.split('/').slice(-2);
+
+        return `${filename[0]}/${filename[1]}`;
     }
 }
