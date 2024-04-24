@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const { status } = useAuth();
+const { status, data, signOut } = useAuth();
+const dropDown = ref(false);
 </script>
 <template>
   <header class="border-b">
@@ -59,11 +60,40 @@ const { status } = useAuth();
           <Icon name="material-symbols:person" class="hidden"></Icon>
           <p class="text-base hidden md:block">sign in</p>
         </NuxtLink>
-        <Icon
+        <div
           v-else
-          name="material-symbols:person"
-          class="hover:text-green-500"
-        />
+          v-auto-animate="{ duration: 50 }"
+          class="flex gap-1 items-center flex-col md:flex-row"
+        >
+          <Icon
+            @click="dropDown = !dropDown"
+            name="material-symbols:person"
+            class="hover:text-green-500"
+          />
+          <div
+            class="hidden lg:block absolute top-10 right-0 bg-white border rounded-b-xl overflow-hidden"
+            v-if="!dropDown"
+          >
+            <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
+              <Icon name="material-symbols:account-circle" class="text-3xl" />
+              <p class="text-lg">Profile</p>
+            </NuxtLink>
+            <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
+              <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
+              <p class="text-lg">Transactions</p>
+            </NuxtLink>
+            <button
+              class="flex gap-2 text p-2 hover:bg-slate-100 w-full"
+              @click="signOut()"
+            >
+              <Icon
+                name="material-symbols-light:logout-rounded"
+                class="text-3xl"
+              />
+              <p class="text-lg font-medium">signout</p>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </header>

@@ -6,7 +6,7 @@ if (status.value == "authenticated") {
 const credentials = reactive({
   firstName: "",
   lastName: "",
-  phoneNumber: "",
+  // phoneNumber: "",
   email: "",
   password: "",
 });
@@ -29,7 +29,7 @@ const credentialsValidate = computed(() => {
   return {
     firstName: credentials.firstName.length > 0,
     lastName: credentials.firstName.length > 0,
-    phoneNumber: RegExp("\\d{10}").test(credentials.phoneNumber),
+    // phoneNumber: RegExp("\\d{10}").test(credentials.phoneNumber),
     email: RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$").test(
       credentials.email
     ),
@@ -156,7 +156,7 @@ async function signup() {
               />
             </div>
 
-            <div>
+            <!-- <div>
               <label class="block mb-2 text-sm text-gray-600"
                 >Phone number</label
               >
@@ -170,9 +170,9 @@ async function signup() {
                 placeholder="09123456789"
                 class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-green-400 :border-green-400 focus:ring-green-400 focus:outline-none focus:ring focus:ring-opacity-40"
               />
-            </div>
+            </div> -->
 
-            <div>
+            <div class="col-span-1 md:col-span-2">
               <label class="block mb-2 text-sm text-gray-600"
                 >Email address</label
               >
@@ -229,28 +229,27 @@ async function signup() {
                 class="text-gray-500 top-[42px] right-2 absolute text-2xl"
               />
             </div>
-
-            <button
-              @click="signup"
-              type="button"
-              class="flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-500 rounded-lg hover:bg-green-400 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-50"
-            >
-              <span>Sign Up </span>
-
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 rtl:-scale-x-100"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
           </form>
+          <button
+            @click="signup"
+            type="button"
+            class="mt-4 flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-500 rounded-lg hover:bg-green-400 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-50"
+          >
+            <span>Sign Up </span>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 rtl:-scale-x-100"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
           <div class="p-4" v-if="success">
             <p class="text-center">
               <span class="text-green-600">Created an account.</span>

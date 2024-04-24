@@ -16,5 +16,5 @@ export default defineNuxtConfig({
       token: { signInResponseTokenPointer: "/access_token" }
     }
   },
-  modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt", "@nuxt/image", "nuxt-icon", "nuxt-swiper", "@sidebase/nuxt-auth", "@nuxt/content"]
+  modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt", "@nuxt/image", "nuxt-icon", "nuxt-swiper", "@sidebase/nuxt-auth", "@nuxt/content", "@formkit/auto-animate"]
 })

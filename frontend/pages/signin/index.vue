@@ -9,11 +9,12 @@ const credentials = reactive({
 });
 async function signin() {
   try {
-    await signIn(credentials);
+    await signIn(credentials, { redirect: false });
+    await navigateTo("/");
   } catch (error: any) {
     if (error.data) {
       alert("Invalid Email or Password");
-    } else {
+    } else if (error) {
       alert("Server is not responding");
     }
   }
