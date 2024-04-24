@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { status, data, signOut } = useAuth();
-const dropDown = ref(false);
+const showMenu = ref(false);
 </script>
 <template>
   <header class="border-b">
@@ -38,10 +38,10 @@ const dropDown = ref(false);
             class="hover:text-green-500 duration-100"
           />
         </div>
-        <Icon
+        <!-- <Icon
           name="material-symbols:favorite-outline-rounded"
           class="hover:text-green-500 duration-100"
-        ></Icon>
+        ></Icon> -->
         <NuxtLink to="/" class="block md:hidden">
           <Icon
             name="material-symbols:home-rounded"
@@ -60,19 +60,20 @@ const dropDown = ref(false);
           <Icon name="material-symbols:person" class="hidden"></Icon>
           <p class="text-base hidden md:block">sign in</p>
         </NuxtLink>
+        <!-- Drop Down -->
         <div
           v-else
           v-auto-animate="{ duration: 50 }"
           class="flex gap-1 items-center flex-col md:flex-row"
         >
           <Icon
-            @click="dropDown = !dropDown"
+            @click="showMenu = !showMenu"
             name="material-symbols:person"
             class="hover:text-green-500"
           />
           <div
             class="hidden lg:block absolute top-10 right-0 bg-white border rounded-b-xl overflow-hidden"
-            v-if="!dropDown"
+            v-if="showMenu"
           >
             <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
               <Icon name="material-symbols:account-circle" class="text-3xl" />
@@ -94,6 +95,48 @@ const dropDown = ref(false);
             </button>
           </div>
         </div>
+      </div>
+    </div>
+    <div
+      class="block md:hidden fixed top-0 h-full w-full duration-200"
+      :class="showMenu ? 'z-10' : '-z-10'"
+    >
+      <div
+        @click="showMenu = false"
+        class="w-full h-full opacity-50 absolute -z-10"
+        :class="(showMenu ? 'bg-gray-50' : 'bg-transparent') + ' duration-200'"
+      ></div>
+      <div
+        :class="
+          showMenu ? 'translate-x-0 ease-out' : 'translate-x-full ease-in'
+        "
+        class="w-[400px] bg-white border h-full ml-auto transition-transform duration-200"
+      >
+        <button
+          class="flex gap-2 text p-2 hover:bg-slate-100 w-full"
+          @click="showMenu = false"
+        >
+          <Icon
+            name="material-symbols:arrow-right-alt"
+            class="text-3xl mb-10"
+          />
+          <p class="text-lg font-medium"></p>
+        </button>
+        <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
+          <Icon name="material-symbols:account-circle" class="text-3xl" />
+          <p class="text-lg">Profile</p>
+        </NuxtLink>
+        <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
+          <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
+          <p class="text-lg">Transactions</p>
+        </NuxtLink>
+        <button
+          class="flex gap-2 text p-2 hover:bg-slate-100 w-full"
+          @click="signOut()"
+        >
+          <Icon name="material-symbols-light:logout-rounded" class="text-3xl" />
+          <p class="text-lg font-medium">signout</p>
+        </button>
       </div>
     </div>
   </header>
