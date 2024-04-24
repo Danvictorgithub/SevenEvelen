@@ -12,17 +12,81 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+enum UserType {
+  Customer
+  Admin
+}
 model User {
   id Int @default(autoincrement()) @id
   email String @unique
   firstName String?
   lastName String?
-  phoneNumber String @unique
   password String
+  image String?
+  status UserType @default(Customer)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // phoneNumber String @unique
+}
+
+model Store {
+  id Int @default(autoincrement()) @id
+  name String
+  image String?
+  address String?
+  opening_hours String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Brand {
+  id Int @default(autoincrement()) @id
+  name String
   image String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  products Product[]
 }
 
+model Vendor {
+  id Int @default(autoincrement()) @id
+  name String
+  image String? 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model ProductType {
+  id Int @default(autoincrement()) @id
+  name String
+  productTypeParent ProductType @relation("ProductTypeBreadCrumb",fields: [productTypeParentId], references: [id], onDelete: Cascade)
+  productTypeParentId Int
+  productTypes ProductType[] @relation("ProductTypeBreadCrumb")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  products Product[]
+}
+
+model Product {
+  id Int @default(autoincrement()) @id
+  name String
+  upc_code String
+  size String
+  stock Int @default(0)
+  price Float @default(0.0)
+  store Store @relation(fields: [storeId], references: [id])
+  storeId Int
+  vendor Vendor @relation(fields: [vendorId], references: [id])
+  vendorId Int
+  brand Brand @relation(fields: [brandId], references: [id])
+  brandId Int
+  productType ProductType @relation(fields: [productTypeId], references: [id])
+  productTypeId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
