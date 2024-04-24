@@ -19,9 +19,9 @@ enum UserType {
 model User {
   id Int @default(autoincrement()) @id
   email String @unique
+  password String
   firstName String?
   lastName String?
-  password String
   image String?
   status UserType @default(Customer)
   createdAt DateTime @default(now())
@@ -61,8 +61,8 @@ model Vendor {
 model ProductType {
   id Int @default(autoincrement()) @id
   name String
-  productTypeParent ProductType @relation("ProductTypeBreadCrumb",fields: [productTypeParentId], references: [id], onDelete: Cascade)
-  productTypeParentId Int
+  productTypeParent ProductType? @relation("ProductTypeBreadCrumb",fields: [productTypeParentId], references: [id], onDelete: Cascade)
+  productTypeParentId Int?
   productTypes ProductType[] @relation("ProductTypeBreadCrumb")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
