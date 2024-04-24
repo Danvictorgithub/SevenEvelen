@@ -60,7 +60,7 @@ model Vendor {
 }
 model ProductType {
   id Int @default(autoincrement()) @id
-  name String
+  name String @unique
   productTypeParent ProductType? @relation("ProductTypeBreadCrumb",fields: [productTypeParentId], references: [id], onDelete: Cascade)
   productTypeParentId Int?
   productTypes ProductType[] @relation("ProductTypeBreadCrumb")
@@ -75,9 +75,9 @@ model VendorProduct {
   originalPrice Float
   brand Brand @relation(fields: [brandId], references: [id])
   brandId Int
-  productType ProductType @relation(fields: [productTypeId], references: [id])
+  productType ProductType @relation(fields: [productTypeId], references: [id], onDelete: Cascade)
   productTypeId Int
-  vendor Vendor @relation(fields: [vendorId], references: [id])
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   vendorId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -86,11 +86,11 @@ model VendorProduct {
 
 model Product {
   id Int @default(autoincrement()) @id
-  product VendorProduct @relation(fields: [productId], references: [id])
+  product VendorProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
   markupRate Float
   stock Int @default(0)
-  store Store @relation(fields: [storeId], references: [id])
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
