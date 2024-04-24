@@ -47,19 +47,17 @@ model Brand {
   image String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  products Product[]
+  products VendorProduct[]
 }
 
 model Vendor {
   id Int @default(autoincrement()) @id
   name String
-  image String? 
+  image String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  products Product[]
+  products VendorProduct[]
 }
-
 model ProductType {
   id Int @default(autoincrement()) @id
   name String
@@ -68,24 +66,32 @@ model ProductType {
   productTypes ProductType[] @relation("ProductTypeBreadCrumb")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  products VendorProduct[]
+}
+model VendorProduct {
+  id Int @default(autoincrement()) @id
+  upcCode String
+  size String
+  originalPrice Float
+  brand Brand @relation(fields: [brandId], references: [id])
+  brandId Int
+  productType ProductType @relation(fields: [productTypeId], references: [id])
+  productTypeId Int
+  vendor Vendor @relation(fields: [vendorId], references: [id])
+  vendorId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   products Product[]
 }
 
 model Product {
   id Int @default(autoincrement()) @id
-  name String
-  upc_code String
-  size String
+  product VendorProduct @relation(fields: [productId], references: [id])
+  productId Int
+  markupRate Float
   stock Int @default(0)
-  price Float @default(0.0)
   store Store @relation(fields: [storeId], references: [id])
   storeId Int
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-  vendorId Int
-  brand Brand @relation(fields: [brandId], references: [id])
-  brandId Int
-  productType ProductType @relation(fields: [productTypeId], references: [id])
-  productTypeId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
