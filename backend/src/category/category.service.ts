@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -14,7 +14,7 @@ export class CategoryService {
     if (createCategoryDto.productTypeParentId) {
       const parentCategory = await this.prisma.productType.findUnique({ where: { id: createCategoryDto.productTypeParentId } });
       if (!parentCategory) {
-        throw new BadRequestException("Parent Category does not exist");
+        throw new NotFoundException("Parent Category does not exist");
       }
     }
     return this.prisma.productType.create({ data: createCategoryDto });
@@ -34,6 +34,10 @@ export class CategoryService {
   }
 
   async findOne(id: number) {
+    const category = await this.prisma.productType.findUnique({ where: { id } });
+    if (!category) {
+      throw new NotFoundException("Category does not exist");
+    }
     return await this.prisma.productType.findUnique({ where: { id } });
   }
 
@@ -45,7 +49,7 @@ export class CategoryService {
     if (updateCategoryDto.productTypeParentId) {
       const parentCategory = await this.prisma.productType.findUnique({ where: { id: updateCategoryDto.productTypeParentId } });
       if (!parentCategory) {
-        throw new BadRequestException("Parent Category does not exist");
+        throw new NotFoundException("Parent Category does not exist");
       }
     }
     if (updateCategoryDto.name) {
@@ -61,7 +65,7 @@ export class CategoryService {
   async remove(id: number) {
     const category = await this.prisma.productType.findUnique({ where: { id } });
     if (!category) {
-      throw new BadRequestException("Category does not exist");
+      throw new NotFoundException("Category does not exist");
     }
     return await this.prisma.productType.delete({ where: { id } });
   }
