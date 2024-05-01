@@ -8,7 +8,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+  create(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
@@ -23,7 +23,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: string, @Body(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 

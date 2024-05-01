@@ -10,7 +10,7 @@ export class VendorProductsController {
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  async create(@Body(new ValidationPipe()) createVendorProductDto: CreateVendorProductDto,
+  async create(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createVendorProductDto: CreateVendorProductDto,
     @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), new FileTypeValidator({ fileType: "image/*" })] })) image: Express.Multer.File
   ) {
     createVendorProductDto.brandId = Number(createVendorProductDto.brandId);
@@ -32,7 +32,7 @@ export class VendorProductsController {
 
   @Patch(':id')
   @UseInterceptors(FileInterceptor('image'))
-  update(@Param('id') id: string, @Body() updateVendorProductDto: UpdateVendorProductDto,
+  update(@Param('id') id: string, @Body(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) updateVendorProductDto: UpdateVendorProductDto,
     @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), new FileTypeValidator({ fileType: "image/*" })] })) image: Express.Multer.File) {
     if (updateVendorProductDto.brandId) { updateVendorProductDto.brandId = Number(updateVendorProductDto.brandId); }
     if (updateVendorProductDto.vendorId) { updateVendorProductDto.vendorId = Number(updateVendorProductDto.vendorId); }

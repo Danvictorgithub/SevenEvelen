@@ -10,7 +10,7 @@ export class VendorsController {
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  create(@Body(new ValidationPipe()) createVendorDto: CreateVendorDto,
+  create(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createVendorDto: CreateVendorDto,
     @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), new FileTypeValidator({ fileType: "image/*" })] })) image: Express.Multer.File
   ) {
     return this.vendorsService.create(createVendorDto, image);
@@ -28,7 +28,7 @@ export class VendorsController {
 
   @Patch(':id')
   @UseInterceptors(FileInterceptor('image'))
-  update(@Param('id') id: string, @Body(new ValidationPipe({ skipUndefinedProperties: true })) updateVendorDto: UpdateVendorDto,
+  update(@Param('id') id: string, @Body(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) updateVendorDto: UpdateVendorDto,
     @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), new FileTypeValidator({ fileType: "image/*" })] })) image: Express.Multer.File) {
     return this.vendorsService.update(+id, updateVendorDto, image);
   }

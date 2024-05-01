@@ -11,7 +11,7 @@ export class BrandsController {
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   create(
-    @Body(new ValidationPipe()) createBrandDto: CreateBrandDto,
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createBrandDto: CreateBrandDto,
     @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new FileTypeValidator({ fileType: "image/*" }), new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 })], })) image: Express.Multer.File
   ) {
     return this.brandsService.create(createBrandDto, image);
@@ -31,7 +31,7 @@ export class BrandsController {
   @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
-    @Body(new ValidationPipe({ skipUndefinedProperties: true })) updateBrandDto: UpdateBrandDto,
+    @Body(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) updateBrandDto: UpdateBrandDto,
     @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new FileTypeValidator({ fileType: "image/*" }), new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 })], })) image: Express.Multer.File
   ) {
     return this.brandsService.update(+id, updateBrandDto, image);

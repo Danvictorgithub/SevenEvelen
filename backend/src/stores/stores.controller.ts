@@ -11,7 +11,7 @@ export class StoresController {
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   create(
-    @Body(new ValidationPipe()) createStoreDto: CreateStoreDto,
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createStoreDto: CreateStoreDto,
     @UploadedFile(new ParseFilePipe({
       fileIsRequired: false, validators: [new FileTypeValidator({ fileType: "image/*" }), new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 })]
     })) image: Express.Multer.File
@@ -33,7 +33,7 @@ export class StoresController {
   @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
-    @Body(new ValidationPipe({ skipUndefinedProperties: true })) updateStoreDto: UpdateStoreDto,
+    @Body(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) updateStoreDto: UpdateStoreDto,
     @UploadedFile(new ParseFilePipe({
       fileIsRequired: false, validators: [new FileTypeValidator({ fileType: "image/*" }), new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 })]
     })) image: Express.Multer.File

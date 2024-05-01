@@ -12,7 +12,7 @@ export class CategoryController {
   @Post()
   // @UseInterceptors(FileInterceptor('image'))
   create(
-    @Body(new ValidationPipe()) createCategoryDto: CreateCategoryDto,
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createCategoryDto: CreateCategoryDto,
     // @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new FileTypeValidator({ fileType: "image/*" }), new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 })], })) image: Express.Multer.File
   ) {
     return this.categoryService.create(createCategoryDto);
@@ -29,7 +29,7 @@ export class CategoryController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body(new ValidationPipe({ skipUndefinedProperties: true })) updateCategoryDto: UpdateCategoryDto) {
+  update(@Param('id') id: string, @Body(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) updateCategoryDto: UpdateCategoryDto) {
     return this.categoryService.update(+id, updateCategoryDto);
   }
 
