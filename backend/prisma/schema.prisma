@@ -69,6 +69,8 @@ model ProductType {
 }
 model VendorProduct {
   id Int @default(autoincrement()) @id
+  name String
+  image String?
   upcCode String
   size String
   originalPrice Float

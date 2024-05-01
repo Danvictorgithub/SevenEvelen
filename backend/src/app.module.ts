@@ -9,9 +9,10 @@ import { CategoryModule } from './category/category.module';
 import { BrandsModule } from './brands/brands.module';
 import { StoresModule } from './stores/stores.module';
 import { VendorsModule } from './vendors/vendors.module';
+import { VendorProductsModule } from './vendor-products/vendor-products.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule],
+  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule],
   controllers: [AppController],
   providers: [AppService],
 })
