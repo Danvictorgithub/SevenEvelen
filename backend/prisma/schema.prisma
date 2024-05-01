@@ -35,6 +35,8 @@ model Store {
   image String?
   address String
   opening_hours String
+  long String?
+  lat String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products Product[]
@@ -95,5 +97,6 @@ model Product {
   storeId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@unique([storeId,productId])
 }
 
