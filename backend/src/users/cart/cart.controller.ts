@@ -35,7 +35,7 @@ export class CartController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto, @Request() req: RequestUser) {
+  update(@Param('id') id: string, @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipUndefinedProperties: true })) updateCartDto: UpdateCartDto, @Request() req: RequestUser) {
     updateCartDto.userId = req.user.id;
     return this.cartService.update(+id, updateCartDto);
   }

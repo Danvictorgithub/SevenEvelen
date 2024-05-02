@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -17,10 +17,16 @@ export class CartService {
     }
     const userCartItem = await this.prisma.cartItem.findUnique({ where: { userId_productId: { productId: createCartDto.productId, userId: createCartDto.userId } } });
     if (userCartItem) {
+      if (createCartDto.quantity > product.stock) {
+        throw new BadRequestException("Quantity exceeds stock")
+      }
       return await this.prisma.cartItem.update({
         where: { userId_productId: { productId: createCartDto.productId, userId: createCartDto.userId } },
         data: { quantity: createCartDto.quantity + userCartItem.quantity }
       });
+    }
+    if (createCartDto.quantity > product.stock) {
+      throw new BadRequestException("Quantity exceeds stock")
     }
     return await this.prisma.cartItem.create({
       data: createCartDto
@@ -45,7 +51,7 @@ export class CartService {
       throw new NotFoundException("Cart item not found");
     }
     if (updateCartDto.productId) {
-      const product = await this.prisma.product.findUnique({ where: { id: updateCartDto.productId } });
+      var product = await this.prisma.product.findUnique({ where: { id: updateCartDto.productId } });
       if (!product) {
         throw new NotFoundException("Product not found");
       }
@@ -54,6 +60,11 @@ export class CartService {
       const user = await this.prisma.user.findUnique({ where: { id: updateCartDto.userId } });
       if (!user) {
         throw new NotFoundException("User not found");
+      }
+    }
+    if (updateCartDto.quantity) {
+      if (updateCartDto.quantity > product.stock) {
+        throw new BadRequestException("Quantity exceeds stock");
       }
     }
     return await this.prisma.cartItem.update({

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -17,10 +17,16 @@ export class CartItemsService {
     }
     const userCartItem = await this.prisma.cartItem.findUnique({ where: { userId_productId: { productId: createCartItemDto.productId, userId: createCartItemDto.userId } } });
     if (userCartItem) {
+      if (createCartItemDto.quantity > product.stock) {
+        throw new BadRequestException("Quantity exceeds stock");
+      }
       return await this.prisma.cartItem.update({
         where: { userId_productId: { productId: createCartItemDto.productId, userId: createCartItemDto.userId } },
         data: { quantity: createCartItemDto.quantity + userCartItem.quantity }
       });
+    }
+    if (createCartItemDto.quantity > product.stock) {
+      throw new BadRequestException("Quantity exceeds stock");
     }
     return await this.prisma.cartItem.create({
       data: createCartItemDto
@@ -45,7 +51,7 @@ export class CartItemsService {
       throw new NotFoundException("Cart item not found");
     }
     if (updateCartItemDto.productId) {
-      const product = await this.prisma.product.findUnique({ where: { id: updateCartItemDto.productId } });
+      var product = await this.prisma.product.findUnique({ where: { id: updateCartItemDto.productId } });
       if (!product) {
         throw new NotFoundException("Product not found");
       }
@@ -54,6 +60,11 @@ export class CartItemsService {
       const user = await this.prisma.user.findUnique({ where: { id: updateCartItemDto.userId } });
       if (!user) {
         throw new NotFoundException("User not found");
+      }
+    }
+    if (updateCartItemDto.quantity) {
+      if (updateCartItemDto.quantity > product.stock) {
+        throw new BadRequestException("Quantity exceeds stock");
       }
     }
     return await this.prisma.cartItem.update({
