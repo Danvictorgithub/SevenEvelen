@@ -11,9 +11,10 @@ import { StoresModule } from './stores/stores.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { VendorProductsModule } from './vendor-products/vendor-products.module';
 import { ProductsModule } from './products/products.module';
+import { CartItemsModule } from './cart-items/cart-items.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule],
+  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule, CartItemsModule],
   controllers: [AppController],
   providers: [AppService],
 })
