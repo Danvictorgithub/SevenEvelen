@@ -7,6 +7,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ProductsService {
   constructor(private readonly prisma: PrismaService) { }
   async create(createProductDto: CreateProductDto) {
+    const store = await this.prisma.store.findUnique({ where: { id: createProductDto.storeId } });
+    if (!store) {
+      throw new NotFoundException("Store not found");
+    }
+    const vendorProduct = await this.prisma.vendorProduct.findUnique({ where: { id: createProductDto.productId } });
+    if (!vendorProduct) {
+      throw new NotFoundException("VendorProduct not found");
+    }
     const product = await this.prisma.product.findUnique({ where: { storeId_productId: { productId: createProductDto.productId, storeId: createProductDto.storeId } } });
     if (product) {
       throw new BadRequestException("Product already exists in this store");
