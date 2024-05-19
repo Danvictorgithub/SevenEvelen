@@ -12,9 +12,11 @@ import { VendorsModule } from './vendors/vendors.module';
 import { VendorProductsModule } from './vendor-products/vendor-products.module';
 import { ProductsModule } from './products/products.module';
 import { CartItemsModule } from './cart-items/cart-items.module';
+import { XenditModule } from './microservice/xendit/xendit.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule, CartItemsModule],
+  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule, CartItemsModule, XenditModule, TransactionsModule],
   controllers: [AppController],
   providers: [AppService],
 })
