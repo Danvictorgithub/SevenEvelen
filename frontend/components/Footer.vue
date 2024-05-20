@@ -146,7 +146,7 @@
 
       <div>
         <p class="text-center text-gray-500">
-          © 7-Eleven 2024 - All rights reserved
+          © 7-Evelen 2024 - All rights reserved
         </p>
       </div>
     </div>
