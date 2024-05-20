@@ -28,6 +28,10 @@ export class ProductsController {
   mostBoughtProducts() {
     return this.productsService.mostBoughtProduct()
   }
+  @Get('randomProduct')
+  randomProduct() {
+    return this.productsService.randomProduct();
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(+id);

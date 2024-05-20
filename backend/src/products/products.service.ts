@@ -66,6 +66,30 @@ export class ProductsService {
   async mostBoughtProduct() {
     return await this.prisma.product.findMany({ where: { id: { in: (await this.prisma.transactionItem.groupBy({ by: 'productId', take: 10, _count: { productId: true }, orderBy: { _count: { productId: 'desc' } } })).map(res => res.productId) } } });
   }
+  async randomProduct() { //Randomly choose a product Daily using Today Date String Hash
+    // return await this.prisma.product.findFirst({ skip: Math.random() * (await this.prisma.product.count() + 1) });
+    // Get the current date in YYYYMMDD format
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+
+    // Use the date string to create a simple hash
+    let hash = 0;
+    for (let i = 0; i < today.length; i++) {
+      const char = today.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+
+    // Get the total number of products
+    const productCount = await this.prisma.product.count();
+
+    // Ensure the hash is non-negative and within the product count range
+    const randomIndex = Math.abs(hash) % productCount;
+
+    // Fetch and return the random product
+    const randomProduct = await this.prisma.product.findFirst({ skip: randomIndex, include: { store: true } });
+    const randomProductNoCart = await this.prisma.cartItem.count({ where: { productId: randomProduct.id } });
+    return { ...randomProduct, userCart: randomProductNoCart };
+  }
   async update(id: number, updateProductDto: UpdateProductDto) {
     const product = await this.prisma.product.findUnique({ where: { id } });
     if (!product) {
