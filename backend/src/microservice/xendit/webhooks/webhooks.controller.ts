@@ -43,6 +43,11 @@ export class WebhooksController {
       if (!product) {
         throw new NotFoundException("Product not found");
       }
+      // Decrements stock
+      const decrementedProduct = await this.prisma.product.update({ where: { id: product.id }, data: { stock: { decrement: body.items[0].quantity } } })
+      if (decrementedProduct.stock < 0) {
+        await this.prisma.product.update({ where: { id: decrementedProduct.id }, data: { stock: 1 } });
+      }
       return this.prisma.transaction.create({
         data: {
           userId: parseInt(userId),
@@ -60,6 +65,13 @@ export class WebhooksController {
         throw new NotFoundException("User not found");
       }
       const products = await this.prisma.cartItem.findMany({ where: { id: { in: productIds } }, include: { product: true } });
+      // Decrements stock
+      products.forEach(async (product) => {
+        const decrementedProduct = await this.prisma.product.update({ where: { id: product.productId }, data: { stock: { decrement: product.quantity } } })
+        if (decrementedProduct.stock < 0) {
+          await this.prisma.product.update({ where: { id: product.productId }, data: { stock: 1 } })
+        }
+      })
       const newTransaction = await this.prisma.transaction.create({
         data: {
           userId,
