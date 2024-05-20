@@ -36,7 +36,7 @@ export class ProductsService {
     return product;
   }
   async newArrivals() {
-    return this.prisma.product.findMany({ take: 10, orderBy: { updatedAt: "desc" } })
+    return this.prisma.product.findMany({ take: 5, orderBy: { updatedAt: "desc" } })
   }
   async trendingProducts() {
     const trendingProductSell = await this.prisma.transactionItem.groupBy({
@@ -59,17 +59,17 @@ export class ProductsService {
         // If counts are equal, sort by updatedAt in descending order
         return new Date(b._max.updatedAt).getTime() - new Date(a._max.updatedAt).getTime();
       })
-      .slice(0, 10); // Take the top 10
+      .slice(0, 5); // Take the top 5
     const parsedResult = await this.prisma.product.findMany({ where: { id: { in: sortedResult.map(res => res.productId) } } })
     return parsedResult;
   }
   async mostBoughtProduct() {
-    return await this.prisma.product.findMany({ where: { id: { in: (await this.prisma.transactionItem.groupBy({ by: 'productId', take: 10, _count: { productId: true }, orderBy: { _count: { productId: 'desc' } } })).map(res => res.productId) } } });
+    return await this.prisma.product.findMany({ where: { id: { in: (await this.prisma.transactionItem.groupBy({ by: 'productId', take: 5, _count: { productId: true }, orderBy: { _count: { productId: 'desc' } } })).map(res => res.productId) } } });
   }
   async randomProduct() { //Randomly choose a product Daily using Today Date String Hash
     // return await this.prisma.product.findFirst({ skip: Math.random() * (await this.prisma.product.count() + 1) });
     // Get the current date in YYYYMMDD format
-    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const today = new Date().toISOString().slice(0, 5).replace(/-/g, "");
 
     // Use the date string to create a simple hash
     let hash = 0;
