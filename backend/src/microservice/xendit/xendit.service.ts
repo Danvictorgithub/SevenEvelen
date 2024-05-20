@@ -79,7 +79,6 @@ export class XenditService {
             throw new BadRequestException("No products found in cart");
         }
         const amount = products.reduce((acc, cur) => acc + (cur.product.product.originalPrice + ((cur.product.markupRate / 100) * cur.product.product.originalPrice)), 0);
-        console.log(amount);
         const { data } = await axios.post<XenditInvoiceResponse>("https://api.xendit.co/v2/invoices", {
             external_id: `${products.map(p => p.id).join("-")}-${user.id}`,
             description: "UserCheckout",

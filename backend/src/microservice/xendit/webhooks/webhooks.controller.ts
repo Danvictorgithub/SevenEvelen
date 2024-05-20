@@ -48,6 +48,7 @@ export class WebhooksController {
       if (decrementedProduct.stock < 0) {
         await this.prisma.product.update({ where: { id: decrementedProduct.id }, data: { stock: 1 } });
       }
+      const updateCarts = await this.prisma.cartItem.updateMany({ where: { quantity: { gt: decrementedProduct.stock } }, data: { quantity: decrementedProduct.stock } })
       return this.prisma.transaction.create({
         data: {
           userId: parseInt(userId),
@@ -71,6 +72,7 @@ export class WebhooksController {
         if (decrementedProduct.stock < 0) {
           await this.prisma.product.update({ where: { id: product.productId }, data: { stock: 1 } })
         }
+        const updateCarts = await this.prisma.cartItem.updateMany({ where: { quantity: { gt: decrementedProduct.stock } }, data: { quantity: decrementedProduct.stock } })
       })
       const newTransaction = await this.prisma.transaction.create({
         data: {
