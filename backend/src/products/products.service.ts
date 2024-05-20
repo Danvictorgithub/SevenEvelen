@@ -35,7 +35,37 @@ export class ProductsService {
     }
     return product;
   }
+  async newArrivals() {
+    return this.prisma.product.findMany({ take: 10, orderBy: { updatedAt: "desc" } })
+  }
+  async trendingProducts() {
+    const trendingProductSell = await this.prisma.transactionItem.groupBy({
+      by: ['productId'],
+      _count: {
+        productId: true,
+      },
+      _max: {
+        updatedAt: true,
+      },
+    });
 
+    // Sorting the result in JavaScript
+    const sortedResult = trendingProductSell
+      .sort((a, b) => {
+        // First sort by count of productId in descending order
+        if (b._count.productId !== a._count.productId) {
+          return b._count.productId - a._count.productId;
+        }
+        // If counts are equal, sort by updatedAt in descending order
+        return new Date(b._max.updatedAt).getTime() - new Date(a._max.updatedAt).getTime();
+      })
+      .slice(0, 10); // Take the top 10
+    const parsedResult = await this.prisma.product.findMany({ where: { id: { in: sortedResult.map(res => res.productId) } } })
+    return parsedResult;
+  }
+  async mostBoughtProduct() {
+    return await this.prisma.product.findMany({ where: { id: { in: (await this.prisma.transactionItem.groupBy({ by: 'productId', take: 10, _count: { productId: true }, orderBy: { _count: { productId: 'desc' } } })).map(res => res.productId) } } });
+  }
   async update(id: number, updateProductDto: UpdateProductDto) {
     const product = await this.prisma.product.findUnique({ where: { id } });
     if (!product) {

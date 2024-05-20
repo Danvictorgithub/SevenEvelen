@@ -16,7 +16,18 @@ export class ProductsController {
   findAll() {
     return this.productsService.findAll();
   }
-
+  @Get('newArrivals')
+  newArrivals() {
+    return this.productsService.newArrivals();
+  }
+  @Get('trendingProducts')
+  trendingProducts() {
+    return this.productsService.trendingProducts();
+  }
+  @Get('mostBoughtProducts')
+  mostBoughtProducts() {
+    return this.productsService.mostBoughtProduct()
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(+id);
