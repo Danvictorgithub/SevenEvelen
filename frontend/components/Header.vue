@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { status, data, signOut } = useAuth();
 const showMenu = ref(false);
+const showCategories = ref(false);
 const API = useRuntimeConfig().public.API;
 export interface Category {
   name: string;
@@ -22,7 +23,7 @@ console.log(categories.value);
           class="hover:text-gray-600 mainCategory h-full flex items-center justify-center"
         >
           <p
-            class="font-bold mx-6 flex items-center justify-center md:block my-auto"
+            class="font-bold mx-6 hidden items-center justify-center md:block my-auto"
           >
             categories<Icon name="ion:md-arrow-dropdown" />
           </p>
@@ -48,6 +49,7 @@ console.log(categories.value);
       >
         <div class="block md:hidden">
           <Icon
+            @click="showCategories = !showCategories"
             name="carbon:categories"
             class="hover:text-green-500 duration-100"
           />
@@ -111,6 +113,34 @@ console.log(categories.value);
         </div>
       </div>
     </div>
+    <!-- Mobile Modal Categories -->
+    <div
+      class="block md:hidden fixed top-0 h-full w-full duration-200"
+      :class="showCategories ? 'z-10' : '-z-10'"
+    >
+      <div
+        @click="showCategories = false"
+        class="w-full h-full opacity-50 absolute -z-10"
+        :class="
+          (showCategories ? 'bg-gray-50' : 'bg-transparent') + ' duration-200'
+        "
+      ></div>
+      <div
+        :class="showCategories ? '' : '-translate-x-full ease-in'"
+        class="w-[400px] bg-white border h-full mr-auto transition-transform duration-200 overflow-scroll no-scrollbar"
+      >
+        <button
+          class="flex gap-2 text p-2 hover:bg-slate-100 w-full items-center"
+          @click="showCategories = false"
+        >
+          <Icon name="material-symbols:arrow-left-alt" class="text-3xl my-6" />
+          <p class="text-lg font-medium text-center">Categories</p>
+        </button>
+
+        <MobileCategory :product-types="categories" />
+      </div>
+    </div>
+    <!-- Mobile Modal Profile -->
     <div
       class="block md:hidden fixed top-0 h-full w-full duration-200"
       :class="showMenu ? 'z-10' : '-z-10'"
@@ -127,13 +157,10 @@ console.log(categories.value);
         class="w-[400px] bg-white border h-full ml-auto transition-transform duration-200"
       >
         <button
-          class="flex gap-2 text p-2 hover:bg-slate-100 w-full"
+          class="flex gap-2 text p-2 hover:bg-slate-100 w-full items-center"
           @click="showMenu = false"
         >
-          <Icon
-            name="material-symbols:arrow-right-alt"
-            class="text-3xl mb-10"
-          />
+          <Icon name="material-symbols:arrow-right-alt" class="text-3xl my-6" />
           <p class="text-lg font-medium"></p>
         </button>
         <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
@@ -159,5 +186,15 @@ console.log(categories.value);
 <style>
 .mainCategory:hover > div {
   display: block;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 </style>
