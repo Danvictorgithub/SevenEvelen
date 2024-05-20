@@ -1,12 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-
+  routeRules: { '/': { ssr: false } },
   runtimeConfig: {
     public: {
       API: (process.env.API || "http://localhost:8080"),
     }
   },
+  spaLoadingTemplate: "./spa-loading-template.html",
   auth: {
     baseURL: process.env.Auth_API || "http://localhost:8080",
     provider: {
