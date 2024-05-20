@@ -34,19 +34,19 @@ export class CartService {
   }
 
   async findAll(userId: number) {
-    return this.prisma.cartItem.findMany();
+    return this.prisma.cartItem.findMany({ where: { userId } });
   }
 
   async findOne(id: number, userId: number) {
-    const cartItem = await this.prisma.cartItem.findUnique({ where: { id } });
+    const cartItem = await this.prisma.cartItem.findUnique({ where: { id, userId } });
     if (!cartItem) {
       throw new NotFoundException("Cart item not found");
     }
     return cartItem;
   }
 
-  async update(id: number, updateCartDto: UpdateCartDto) {
-    const cartItem = await this.prisma.cartItem.findUnique({ where: { id } });
+  async update(id: number, updateCartDto: UpdateCartDto, userId: number) {
+    const cartItem = await this.prisma.cartItem.findUnique({ where: { id, userId } });
     if (!cartItem) {
       throw new NotFoundException("Cart item not found");
     }

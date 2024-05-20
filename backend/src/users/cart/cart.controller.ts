@@ -11,19 +11,19 @@ export interface RequestUser extends Request {
     type: string,
   }
 }
-@Controller('users/cart')
+@Controller('user_cart')
+@UseGuards(JwtAuthGuard)
 export class CartController {
   constructor(private readonly cartService: CartService) { }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+
   create(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createCartDto: CreateCartDto, @Request() req: RequestUser) {
     createCartDto.userId = req.user.id;
     return this.cartService.create(createCartDto);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   findAll(@Request() req: RequestUser) {
     return this.cartService.findAll(req.user.id);
   }
@@ -37,7 +37,7 @@ export class CartController {
   @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipUndefinedProperties: true })) updateCartDto: UpdateCartDto, @Request() req: RequestUser) {
     updateCartDto.userId = req.user.id;
-    return this.cartService.update(+id, updateCartDto);
+    return this.cartService.update(+id, updateCartDto, req.user.id);
   }
 
   @Delete(':id',)
