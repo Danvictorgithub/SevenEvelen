@@ -1,18 +1,32 @@
 <script setup lang="ts">
 const { status, data, signOut } = useAuth();
 const showMenu = ref(false);
+const API = useRuntimeConfig().public.API;
+export interface Category {
+  name: string;
+  productTypes: Array<Category>;
+}
+const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
+console.log(categories.value);
 </script>
 <template>
   <header class="border-b">
     <div
       class="p-4 md:p-0 mx-auto container flex flex-col md:flex-row items-center justify-between"
     >
-      <div class="flex justify-center items-center rounded-xl h-14 pr-4">
+      <div
+        class="flex justify-center items-center rounded-xl h-14 pr-4 relative"
+      >
         <img src="/logo2.png" class="h-full" alt="" />
-        <div class="hover:text-gray-600">
-          <p class="font-bold mx-6 hidden md:block">
+        <div
+          class="hover:text-gray-600 mainCategory h-full flex items-center justify-center"
+        >
+          <p
+            class="font-bold mx-6 flex items-center justify-center md:block my-auto"
+          >
             categories<Icon name="ion:md-arrow-dropdown" />
           </p>
+          <Category :product-types="categories as Category[]" />
         </div>
       </div>
       <div class="relative text-gray-600 flex-1 w-full">
@@ -141,3 +155,9 @@ const showMenu = ref(false);
     </div>
   </header>
 </template>
+
+<style>
+.mainCategory:hover > div {
+  display: block;
+}
+</style>

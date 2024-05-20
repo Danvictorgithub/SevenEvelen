@@ -6,6 +6,12 @@
         <img src="/pepsi.jpg" class="w-full h-full object-cover" alt="" />
       </div>
     </section>
+    <section>
+      <div>
+        <h2>New Arrival</h2>
+        <div></div>
+      </div>
+    </section>
   </main>
   <Footer />
 </template>
