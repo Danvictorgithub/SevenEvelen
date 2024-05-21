@@ -89,7 +89,7 @@ const API = useRuntimeConfig().public.API;
 
               <div class="flex items-center justify-between mt-4">
                 <span class="text-base lg:text-3xl font-bold text-gray-900"
-                  >$599</span
+                  >₱599</span
                 >
                 <a
                   href="#"

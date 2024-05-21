@@ -138,7 +138,7 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
           <p class="text-lg font-medium text-center">Categories</p>
         </button>
 
-        <MobileCategory :product-types="categories" />
+        <MobileCategory :product-types="categories as Category[]" />
       </div>
     </div>
     <!-- Mobile Modal Profile -->
