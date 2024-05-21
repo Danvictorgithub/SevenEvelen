@@ -1,14 +1,13 @@
 <script setup lang="ts">
-const { status, data, signOut } = useAuth();
-const showMenu = ref(false);
-const showCategories = ref(false);
-const API = useRuntimeConfig().public.API;
 export interface Category {
   name: string;
   productTypes: Array<Category>;
 }
+const { status, data, signOut } = useAuth();
+const showMenu = ref(false);
+const showCategories = ref(false);
+const API = useRuntimeConfig().public.API;
 const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
-console.log(categories.value);
 </script>
 <template>
   <header class="border-b">
@@ -18,7 +17,9 @@ console.log(categories.value);
       <div
         class="flex justify-center items-center rounded-xl h-14 pr-4 relative"
       >
-        <img src="/logo2.png" class="h-full" alt="" />
+        <NuxtLink to="/" class="h-full">
+          <img src="/logo2.png" class="h-full" alt="" />
+        </NuxtLink>
         <div
           class="hover:text-gray-600 mainCategory h-full flex items-center justify-center"
         >
