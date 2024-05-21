@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Category } from "~/components/Header.vue";
+
 const API = useRuntimeConfig().public.API;
 const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
 const showMore = ref(false);
@@ -36,6 +38,44 @@ const showMore = ref(false);
             View More
           </button>
         </div>
+        <p class="font-black my-4">Price</p>
+        <div class="flex gap-4">
+          <div>
+            <label for="card" class="block text-sm text-gray-500 text-center"
+              >Min Price</label
+            >
+
+            <div class="relative flex items-center mt-2">
+              <input
+                min="0"
+                max="99999"
+                type="number"
+                placeholder="0"
+                class="block w-full py-2.5 text-gray-700 placeholder-gray-400/70 bg-white border border-gray-200 rounded-lg pl-11 pr-5 rtl:pr-11 rtl:pl-5 focus:border-blue-400 :border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </div>
+          </div>
+          <div>
+            <label for="card" class="block text-sm text-gray-500 text-center"
+              >Max Price</label
+            >
+
+            <div class="relative flex items-center mt-2">
+              <input
+                type="number"
+                min="0"
+                max="99999"
+                placeholder="99999"
+                class="block w-full py-2.5 text-gray-700 placeholder-gray-400/70 bg-white border border-gray-200 rounded-lg pl-11 pr-5 rtl:pr-11 rtl:pl-5 focus:border-blue-400 :border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </div>
+          </div>
+        </div>
+        <button
+          class="font-bold text-center p-3 bg-green-500 hover:bg-green-500 text-white rounded-xl my-4 w-full"
+        >
+          Apply Query
+        </button>
       </div>
       <div class="flex items-start justify-between w-full">
         <div>
