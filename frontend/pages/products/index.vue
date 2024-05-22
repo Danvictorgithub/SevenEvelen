@@ -11,7 +11,7 @@ const showFilter = ref(false);
   <main class="min-h-svh">
     <section class="container mx-auto my-12 flex">
       <div
-        class="w-[300px] bg-white fixed lg:static h-full top-0 left-0 overflow-scroll"
+        class="w-[300px] bg-white fixed lg:static h-full top-0 left-0 overflow-scroll duration-200"
         :class="showFilter ? '' : '-translate-x-full lg:translate-x-0'"
       >
         <button
@@ -92,11 +92,31 @@ const showFilter = ref(false);
       </div>
       <div class="flex flex-col items-start justify-between w-full">
         <!-- Mobile Query -->
-        <div class="flex justify-between items-center lg:hidden gap-4">
-          <p>Best Match</p>
-          <button>Price</button>
-          <button>Filter</button>
+        <div class="w-full px-4 block lg:hidden">
+          <div class="flex justify-between items-center gap-4 w-full">
+            <button
+              class="basis-0 flex-1 font-bold rounded-xl p-4 text-white bg-green-500"
+            >
+              Best Match
+            </button>
+            <button
+              class="basis-0 flex-1 font-bold rounded-xl p-4 border flex gap-4 items-center justify-center"
+            >
+              Price <Icon name="teenyicons:up-solid" />
+            </button>
+            <button
+              class="basis=0 flex-1 font-bold rounded-xl p-4 border flex gap-4 items-center justify-center"
+              @click="showFilter = true"
+            >
+              <Icon name="iconoir:filter-solid" />Filter
+            </button>
+          </div>
+          <div class="py-2">
+            <p class="font-bold text-xl">mouse</p>
+            <p class="mt-2">2607 items found for "mouse"</p>
+          </div>
         </div>
+
         <div class="items-start justify-between w-full p-4 hidden lg:flex">
           <div class="">
             <p class="font-bold text-xl">mouse</p>
