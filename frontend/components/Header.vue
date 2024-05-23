@@ -3,11 +3,27 @@ export interface Category {
   name: string;
   productTypes: Array<Category>;
 }
-const { status, data, signOut } = useAuth();
+const { status, data, signOut, token } = useAuth();
+const cart = cartNumber();
 const showMenu = ref(false);
 const showCategories = ref(false);
 const API = useRuntimeConfig().public.API;
 const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
+// const cart = ref(0);
+// if (status.value == "authenticated") {
+//   const data = await $fetch<number>(`${API}/user_cart/count`, {
+//     headers: { Authorization: token.value as string },
+//   }).catch((e) => {
+//     if (e.data) {
+//       alert(e.data.message);
+//     } else if (e) {
+//       alert("Server is not responding");
+//     }
+//   });
+//   if (data) {
+//     cart.value = data;
+//   }
+// }
 </script>
 <template>
   <header class="border-b bg-white">
@@ -65,10 +81,21 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
             class="hover:text-green-500 duration-100"
           />
         </NuxtLink>
-        <Icon
-          name="material-symbols:shopping-cart-rounded"
-          class="hover:text-green-500"
-        ></Icon>
+        <NuxtLink
+          :to="status == 'authenticated' ? '/user/cart' : '/signin'"
+          class="relative"
+        >
+          <Icon
+            name="material-symbols:shopping-cart-rounded"
+            class="hover:text-green-500"
+          ></Icon>
+          <p
+            v-if="status == 'authenticated'"
+            class="bg-green-500 p-1 flex items-center justify-center text-sm font-medium rounded-full h-6 w-6 absolute -top-1 -right-3 border-2 border-white text-white"
+          >
+            {{ cart }}
+          </p>
+        </NuxtLink>
         <NuxtLink
           v-if="status == 'unauthenticated'"
           to="/signin"

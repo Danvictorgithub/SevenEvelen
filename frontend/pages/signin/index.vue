@@ -3,21 +3,30 @@ const { status, signIn } = useAuth();
 if (status.value == "authenticated") {
   await navigateTo("/");
 }
+const loading = ref(false);
+const error = ref(false);
+const errorMessage = ref("");
 const credentials = reactive({
   email: "",
   password: "",
 });
 async function signin() {
+  loading.value = true;
   try {
     await signIn(credentials, { redirect: false });
+    await getCartValue();
     await navigateTo("/");
-  } catch (error: any) {
-    if (error.data) {
-      alert("Invalid Email or Password");
-    } else if (error) {
-      alert("Server is not responding");
+  } catch (e: any) {
+    error.value = true;
+    if (e.data) {
+      // alert("Invalid Email or Password");
+      errorMessage.value = "Invalid Email or Password";
+    } else if (e) {
+      errorMessage.value = "Server is not responding";
+      // alert("Server is not responding");
     }
   }
+  loading.value = false;
 }
 </script>
 <template>
@@ -96,6 +105,7 @@ async function signin() {
                   type="button"
                   class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-green-500 rounded-lg hover:bg-green-400 focus:outline-none focus:bg-green-400 focus:ring focus:ring-green-300 focus:ring-opacity-50"
                 >
+                  <Icon name="eos-icons:loading" v-if="loading" />
                   Sign in
                 </button>
               </div>
@@ -111,6 +121,19 @@ async function signin() {
             </p>
           </div>
         </div>
+        <UModal v-model="error">
+          <div class="text-center p-4">
+            <p>
+              <Icon
+                name="material-symbols:error-outline"
+                class="text-7xl text-red-600"
+              />
+            </p>
+            <p class="p-4 font-bold text-slate-800">
+              {{ errorMessage }}
+            </p>
+          </div>
+        </UModal>
       </div>
     </div>
   </div>

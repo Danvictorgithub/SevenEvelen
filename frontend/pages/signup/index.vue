@@ -1,4 +1,7 @@
 <script setup lang="ts">
+const loading = ref(false);
+const error = ref(false);
+const errorMessage = ref("");
 const { status, signUp } = useAuth();
 if (status.value == "authenticated") {
   await navigateTo("/");
@@ -43,6 +46,7 @@ async function signup() {
   if (
     Object.values(credentialsValidate.value).every((value) => value === true)
   ) {
+    loading.value = true;
     try {
       await signUp(credentials, { redirect: false });
       startCountDown();
@@ -53,6 +57,7 @@ async function signup() {
         alert(e);
       }
     }
+    loading.value = false;
   }
 }
 </script>
@@ -235,7 +240,10 @@ async function signup() {
             type="button"
             class="mt-4 flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-500 rounded-lg hover:bg-green-400 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-50"
           >
-            <span>Sign Up </span>
+            <span
+              ><Icon name="eos-icons:loading" v-if="loading" class="mr-4" />Sign
+              Up
+            </span>
 
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -261,4 +269,17 @@ async function signup() {
       </div>
     </div>
   </section>
+  <UModal v-model="error">
+    <div class="text-center p-4">
+      <p>
+        <Icon
+          name="material-symbols:error-outline"
+          class="text-7xl text-red-600"
+        />
+      </p>
+      <p class="p-4 font-bold text-slate-800">
+        {{ errorMessage }}
+      </p>
+    </div>
+  </UModal>
 </template>
