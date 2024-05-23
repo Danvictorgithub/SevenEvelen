@@ -43,7 +43,7 @@ export class XenditService {
             customer_notification_preference: {
                 "invoice_paid": ["email"],
             },
-            success_redirect_url: `${process.env.FRONTEND_URL}/transactions`,
+            success_redirect_url: `${process.env.FRONTEND_URL}/user/transactions`,
             items: [{
                 name: product.product.name,
                 quantity: buyNowDto.quantity,
@@ -78,7 +78,8 @@ export class XenditService {
         else if (products.length == 0) {
             throw new BadRequestException("No products found in cart");
         }
-        const amount = products.reduce((acc, cur) => acc + (cur.product.product.originalPrice + ((cur.product.markupRate / 100) * cur.product.product.originalPrice)), 0);
+        const amount = products.reduce((acc, cur) => (acc + (cur.product.product.originalPrice + ((cur.product.markupRate / 100) * cur.product.product.originalPrice)) * cur.quantity), 0);
+        console.log(amount);
         const { data } = await axios.post<XenditInvoiceResponse>("https://api.xendit.co/v2/invoices", {
             external_id: `${products.map(p => p.id).join("-")}-${user.id}`,
             description: "UserCheckout",
@@ -88,7 +89,7 @@ export class XenditService {
             customer_notification_preference: {
                 "invoice_paid": ["email"],
             },
-            success_redirect_url: `${process.env.FRONTEND_URL}/transactions`,
+            success_redirect_url: `${process.env.FRONTEND_URL}/user/transactions`,
             items: products.map(p => ({
                 name: p.product.product.name,
                 quantity: p.quantity,
