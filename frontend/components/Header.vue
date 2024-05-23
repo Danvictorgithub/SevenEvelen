@@ -1,29 +1,10 @@
 <script setup lang="ts">
-export interface Category {
-  name: string;
-  productTypes: Array<Category>;
-}
 const { status, data, signOut, token } = useAuth();
 const cart = cartNumber();
 const showMenu = ref(false);
 const showCategories = ref(false);
 const API = useRuntimeConfig().public.API;
 const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
-// const cart = ref(0);
-// if (status.value == "authenticated") {
-//   const data = await $fetch<number>(`${API}/user_cart/count`, {
-//     headers: { Authorization: token.value as string },
-//   }).catch((e) => {
-//     if (e.data) {
-//       alert(e.data.message);
-//     } else if (e) {
-//       alert("Server is not responding");
-//     }
-//   });
-//   if (data) {
-//     cart.value = data;
-//   }
-// }
 </script>
 <template>
   <header class="border-b bg-white">

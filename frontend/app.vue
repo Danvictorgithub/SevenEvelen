@@ -3,5 +3,5 @@
   <NuxtPage />
 </template>
 <script setup lang="ts">
-await callOnce(getCartValue);
+await callOnce(await getCartValue);
 </script>

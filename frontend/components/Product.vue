@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { ProductType } from "~/pages/index.vue";
-
 defineProps<{ product: ProductType }>();
 </script>
 <template>

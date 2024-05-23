@@ -1,27 +1,6 @@
 <script setup lang="ts">
 const API = useRuntimeConfig().public.API;
-export interface ProductType {
-  id: number;
-  markupRate: number;
-  stock: number;
-  product: {
-    name: string;
-    image: string;
-    upcCode: string;
-    size: string;
-    originalPrice: number;
-    productType: { name: string };
-    brand: {
-      name: string;
-      image: string;
-    };
-    vendor: {
-      name: string;
-      image: string;
-    };
-  };
-  userCart: number;
-}
+
 const { data: newArrival } = await useFetch<Array<ProductType>>(
   `${API}/products/newArrivals`
 );
