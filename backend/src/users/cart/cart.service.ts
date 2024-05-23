@@ -34,9 +34,15 @@ export class CartService {
   }
 
   async findAll(userId: number) {
-    return this.prisma.cartItem.findMany({ where: { userId } });
+    return this.prisma.cartItem.findMany({ where: { userId }, include: { product: { include: { product: true } } } });
   }
-
+  async countAll(userId: number) {
+    const count = (await this.prisma.cartItem.aggregate({ where: { userId }, _sum: { quantity: true } }))._sum.quantity;
+    if (!count) {
+      return 0;
+    }
+    return count;
+  }
   async findOne(id: number, userId: number) {
     const cartItem = await this.prisma.cartItem.findUnique({ where: { id, userId } });
     if (!cartItem) {
@@ -51,7 +57,7 @@ export class CartService {
       throw new NotFoundException("Cart item not found");
     }
     if (updateCartDto.productId) {
-      var product = await this.prisma.product.findUnique({ where: { id: updateCartDto.productId } });
+      const product = await this.prisma.product.findUnique({ where: { id: updateCartDto.productId } });
       if (!product) {
         throw new NotFoundException("Product not found");
       }
@@ -63,6 +69,7 @@ export class CartService {
       }
     }
     if (updateCartDto.quantity) {
+      const product = await this.prisma.product.findUnique({ where: { id: cartItem.productId } });
       if (updateCartDto.quantity > product.stock) {
         throw new BadRequestException("Quantity exceeds stock");
       }

@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ProductsQuery } from './dto/productsQuery.dto';
 
 @Injectable()
 export class ProductsService {
@@ -24,19 +25,22 @@ export class ProductsService {
     });
   }
 
-  async findAll() {
-    return await this.prisma.product.findMany();
+  async findAll(query: ProductsQuery) {
+    if (Object.keys(query).length > 0) {
+      return await this.prisma.product.findMany({ ...query, include: { product: { include: { productType: true, brand: true, vendor: true } } } });
+    }
+    return await this.prisma.product.findMany({ include: { product: { include: { productType: true, brand: true, vendor: true } } } });
   }
 
   async findOne(id: number) {
-    const product = await this.prisma.product.findUnique({ where: { id } });
+    const product = await this.prisma.product.findUnique({ where: { id }, include: { product: { include: { productType: true, brand: true, vendor: true } } } });
     if (!product) {
       throw new NotFoundException("Product not found");
     }
     return product;
   }
   async newArrivals() {
-    return this.prisma.product.findMany({ take: 5, orderBy: { updatedAt: "desc" } })
+    return this.prisma.product.findMany({ take: 5, orderBy: { updatedAt: "desc" }, include: { product: { include: { productType: true, brand: true, vendor: true } } } })
   }
   async trendingProducts() {
     const trendingProductSell = await this.prisma.transactionItem.groupBy({
@@ -60,11 +64,11 @@ export class ProductsService {
         return new Date(b._max.updatedAt).getTime() - new Date(a._max.updatedAt).getTime();
       })
       .slice(0, 5); // Take the top 5
-    const parsedResult = await this.prisma.product.findMany({ where: { id: { in: sortedResult.map(res => res.productId) } } })
+    const parsedResult = await this.prisma.product.findMany({ where: { id: { in: sortedResult.map(res => res.productId) } }, include: { product: { include: { productType: true, brand: true, vendor: true } } } })
     return parsedResult;
   }
   async mostBoughtProduct() {
-    return await this.prisma.product.findMany({ where: { id: { in: (await this.prisma.transactionItem.groupBy({ by: 'productId', take: 5, _count: { productId: true }, orderBy: { _count: { productId: 'desc' } } })).map(res => res.productId) } } });
+    return await this.prisma.product.findMany({ where: { id: { in: (await this.prisma.transactionItem.groupBy({ by: 'productId', take: 5, _count: { productId: true }, orderBy: { _count: { productId: 'desc' } } })).map(res => res.productId) } }, include: { product: { include: { productType: true, brand: true, vendor: true } } } });
   }
   async randomProduct() { //Randomly choose a product Daily using Today Date String Hash
     // return await this.prisma.product.findFirst({ skip: Math.random() * (await this.prisma.product.count() + 1) });
@@ -86,7 +90,7 @@ export class ProductsService {
     const randomIndex = Math.abs(hash) % productCount;
 
     // Fetch and return the random product
-    const randomProduct = await this.prisma.product.findFirst({ skip: randomIndex, include: { store: true } });
+    const randomProduct = await this.prisma.product.findFirst({ skip: randomIndex, include: { store: true, product: { include: { productType: true, brand: true, vendor: true, } } } });
     const randomProductNoCart = await this.prisma.cartItem.count({ where: { productId: randomProduct.id } });
     return { ...randomProduct, userCart: randomProductNoCart };
   }

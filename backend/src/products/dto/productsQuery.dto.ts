@@ -2,7 +2,7 @@ import { Type } from "class-transformer";
 import { IsInt, Min } from "class-validator";
 
 export class ProductsQuery {
-    @Min(1)
+    @Min(0)
     @IsInt()
     @Type(() => Number)
     skip: number;

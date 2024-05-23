@@ -17,7 +17,6 @@ export class CartController {
   constructor(private readonly cartService: CartService) { }
 
   @Post()
-
   create(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createCartDto: CreateCartDto, @Request() req: RequestUser) {
     createCartDto.userId = req.user.id;
     return this.cartService.create(createCartDto);
@@ -27,7 +26,10 @@ export class CartController {
   findAll(@Request() req: RequestUser) {
     return this.cartService.findAll(req.user.id);
   }
-
+  @Get('count')
+  countAll(@Request() req: RequestUser) {
+    return this.cartService.countAll(req.user.id);
+  }
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req: RequestUser) {
     return this.cartService.findOne(+id, req.user.id);

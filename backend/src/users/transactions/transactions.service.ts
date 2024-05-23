@@ -21,7 +21,7 @@ export class TransactionsService {
       // const maxPage = Math.floor(await this.prisma.transaction.count({ where: { userId: user.id } }) / query.take)
       const transactionCount = await this.prisma.transaction.findMany({ where: { userId: user.id } });
       const maxPage = Math.floor(transactionCount.length / query.take);
-      return { transactions, maxPage: maxPage == 0 ? 1 : maxPage };
+      return { transactions, maxPage: maxPage == 0 ? 1 : maxPage, transactionCount };
     }
     const transactions = await this.prisma.transaction.findMany({ where: { userId: user.id } });
     return transactions;
