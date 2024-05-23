@@ -3,7 +3,7 @@ const API = useRuntimeConfig().public.API;
 </script>
 <template>
   <Header />
-  <main class="min-h-svh">
+  <main class="min-h-svh bg-white">
     <section class="container mx-auto py-12">
       <div class="border rounded-xl h-[512px] overflow-hidden">
         <img src="/pepsi.jpg" class="w-full h-full object-cover" alt="" />

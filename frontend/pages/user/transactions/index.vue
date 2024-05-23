@@ -3,7 +3,7 @@ const API = useRuntimeConfig().public.API;
 </script>
 <template>
   <Header />
-  <main class="min-h-svh">
+  <main class="min-h-svh bg-white">
     <section class="container px-4 mx-auto py-12">
       <h2 class="text-lg font-medium text-gray-800 text-center">
         Transactions

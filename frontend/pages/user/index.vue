@@ -3,6 +3,6 @@ const API = useRuntimeConfig().public.API;
 </script>
 <template>
   <Header />
-  <main class="min-h-svh"></main>
+  <main class="min-h-svh bg-white"></main>
   <Footer />
 </template>

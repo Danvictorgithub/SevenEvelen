@@ -10,7 +10,7 @@ const API = useRuntimeConfig().public.API;
 const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
 </script>
 <template>
-  <header class="border-b">
+  <header class="border-b bg-white">
     <div
       class="p-4 md:p-0 mx-auto container flex flex-col md:flex-row items-center justify-between"
     >
@@ -99,6 +99,13 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
             <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
               <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
               <p class="text-lg">Transactions</p>
+            </NuxtLink>
+            <NuxtLink
+              to="/admin"
+              class="flex gap-2 text p-2 hover:bg-slate-100"
+            >
+              <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
+              <p class="text-lg">Admin</p>
             </NuxtLink>
             <button
               class="flex gap-2 text p-2 hover:bg-slate-100 w-full"

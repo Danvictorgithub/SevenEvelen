@@ -3,7 +3,7 @@ const API = useRuntimeConfig().public.API;
 </script>
 <template>
   <Header />
-  <main class="min-h-svh">
+  <main class="min-h-svh bg-white">
     <section class="my-12">
       <h1 class="mb-10 text-center text-2xl font-bold">Cart Items</h1>
       <div

@@ -8,7 +8,7 @@ const showFilter = ref(false);
 </script>
 <template>
   <Header />
-  <main class="min-h-svh">
+  <main class="min-h-svh bg-white">
     <section class="container mx-auto my-12 flex">
       <div
         class="w-[300px] bg-white fixed lg:static h-full top-0 left-0 overflow-scroll duration-200"
