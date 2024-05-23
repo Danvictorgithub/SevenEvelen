@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import apexchart from "vue3-apexcharts";
 const API = useRuntimeConfig().public.API;
 const { token } = useAuth();
 const { data: locations } = await useFetch(`${API}/stores/locations`, {
@@ -100,7 +99,7 @@ const chartOptions2 = ref({
 </script>
 <template>
   <Header />
-  <main class="min-h-svh flex">
+  <main class="min-h-svh flex relative">
     <AdminSideBar />
     <section class="bg-slate-100 w-full p-4">
       <div class="grid grid-cols-1 lg:grid-cols-4 my-6 gap-4">
@@ -194,8 +193,3 @@ const chartOptions2 = ref({
   </main>
   <Footer />
 </template>
-<style scoped>
-.router-link-active.router-link-exact-active {
-  @apply bg-green-600;
-}
-</style>

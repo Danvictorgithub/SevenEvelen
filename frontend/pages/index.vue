@@ -1,13 +1,51 @@
 <script setup lang="ts">
 const API = useRuntimeConfig().public.API;
+const items = [
+  "/pepsi.jpg",
+  "/evelen.jpg",
+  "/coke.jpg",
+  "/evelen2.jpg",
+  "/evelen3.jpg",
+  "/evelen4.jpg",
+];
+const carouselRef = ref();
+
+onMounted(() => {
+  setInterval(() => {
+    if (!carouselRef.value) return;
+
+    if (carouselRef.value.page === carouselRef.value.pages) {
+      return carouselRef.value.select(0);
+    }
+
+    carouselRef.value.next();
+  }, 3000);
+});
 </script>
 <template>
   <Header />
   <main class="min-h-svh bg-white">
     <section class="container mx-auto py-12">
-      <div class="border rounded-xl h-[512px] overflow-hidden">
+      <UCarousel
+        ref="carouselRef"
+        v-slot="{ item }"
+        :items="items"
+        :ui="{ item: 'basis-full h-[512px]' }"
+        class="rounded-lg overflow-hidden"
+        :prev-button="{
+          color: 'white',
+        }"
+        :next-button="{
+          color: 'white',
+        }"
+        arrows
+        indicators
+      >
+        <img :src="item" class="w-full object-cover" draggable="false" />
+      </UCarousel>
+      <!-- <div class="border rounded-xl h-[512px] overflow-hidden">
         <img src="/pepsi.jpg" class="w-full h-full object-cover" alt="" />
-      </div>
+      </div> -->
     </section>
     <section
       class="container mx-auto flex flex-wrap gap-4 items-center justify-center lg:grid lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]"

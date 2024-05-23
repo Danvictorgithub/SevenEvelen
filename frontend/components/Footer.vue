@@ -96,7 +96,7 @@
               <a
                 href="#"
                 class="block mt-2 text-sm text-gray-600 hover:underline"
-                >Tec</a
+                >Tech</a
               >
               <a
                 href="#"

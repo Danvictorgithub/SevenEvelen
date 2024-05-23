@@ -3,7 +3,7 @@ const isSideBarOpen = ref(false);
 </script>
 <template>
   <aside
-    class="max-w-[300px] lg:max-w-[400px] w-full h-full lg:h-auto p-4 bg-green-500 text-white absolute lg:relative duration-200 lg:-translate-x-0"
+    class="max-w-[300px] lg:max-w-[400px] w-full h-full lg:h-auto p-4 bg-green-500 text-white fixed top-0 lg:relative duration-200 lg:-translate-x-0 z-[2000]"
     :class="{ '-translate-x-full': !isSideBarOpen }"
   >
     <button

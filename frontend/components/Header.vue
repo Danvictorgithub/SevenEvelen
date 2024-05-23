@@ -81,7 +81,7 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
         <div
           v-else
           v-auto-animate="{ duration: 50 }"
-          class="flex gap-1 items-center flex-col md:flex-row"
+          class="flex gap-1 items-center flex-col md:flex-row z-10"
         >
           <Icon
             @click="showMenu = !showMenu"
@@ -104,7 +104,7 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
               to="/admin"
               class="flex gap-2 text p-2 hover:bg-slate-100"
             >
-              <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
+              <Icon name="eos-icons:admin" class="text-3xl" />
               <p class="text-lg">Admin</p>
             </NuxtLink>
             <button
@@ -178,6 +178,10 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
         <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
           <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
           <p class="text-lg">Transactions</p>
+        </NuxtLink>
+        <NuxtLink to="/admin" class="flex gap-2 text p-2 hover:bg-slate-100">
+          <Icon name="eos-icons:admin" class="text-3xl" />
+          <p class="text-lg">Admin</p>
         </NuxtLink>
         <button
           class="flex gap-2 text p-2 hover:bg-slate-100 w-full"
