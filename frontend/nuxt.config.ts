@@ -32,5 +32,5 @@ export default defineNuxtConfig({
       token: { signInResponseTokenPointer: "/access_token" }
     }
   },
-  modules: ["@vueuse/nuxt", "@nuxt/image", "nuxt-swiper", "@sidebase/nuxt-auth", "@nuxt/content", "@formkit/auto-animate", "@nuxt/ui"]
+  modules: ["@vueuse/nuxt", "@nuxt/image", "nuxt-swiper", "@sidebase/nuxt-auth", "@nuxt/content", "@formkit/auto-animate", "@nuxt/ui", 'nuxt3-leaflet']
 })
