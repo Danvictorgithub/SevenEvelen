@@ -14,9 +14,10 @@ import { ProductsModule } from './products/products.module';
 import { CartItemsModule } from './cart-items/cart-items.module';
 import { XenditModule } from './microservice/xendit/xendit.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule, CartItemsModule, XenditModule, TransactionsModule],
+  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule, CartItemsModule, XenditModule, TransactionsModule, StatsModule],
   controllers: [AppController],
   providers: [AppService],
 })

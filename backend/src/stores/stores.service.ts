@@ -17,7 +17,9 @@ export class StoresService {
   async findAll() {
     return await this.prisma.store.findMany();
   }
-
+  async findLocations() {
+    return await this.prisma.store.findMany({ select: { lat: true, long: true } });
+  }
   async findOne(id: number) {
     const store = await this.prisma.store.findUnique({ where: { id } });
     if (!store) {

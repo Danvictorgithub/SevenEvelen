@@ -23,12 +23,15 @@ export class StoresController {
   findAll() {
     return this.storesService.findAll();
   }
+  @Get('locations')
+  findLocations() {
+    return this.storesService.findLocations()
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.storesService.findOne(+id);
   }
-
   @Patch(':id')
   @UseInterceptors(FileInterceptor('image'))
   update(
