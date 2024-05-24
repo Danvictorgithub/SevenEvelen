@@ -27,11 +27,39 @@ export class ProductsService {
 
   async findAll(query: ProductsQuery) {
     if (Object.keys(query).length > 0) {
-      return await this.prisma.product.findMany({ ...query, include: { product: { include: { productType: true, brand: true, vendor: true } } } });
+      const { lte, gte, orderBy, name, ...mainQuery } = query;
+      if (orderBy) {
+        mainQuery['orderBy'] = [{
+          product: { originalPrice: orderBy },
+        }, { markupRate: orderBy }]
+      }
+      if (name) {
+        mainQuery['where'] = { product: { name: { contains: name, mode: 'insensitive' } } };
+      }
+      const queryResult = await this.prisma.product.findMany({
+        ...mainQuery, include: { product: { include: { productType: true, brand: true, vendor: true } } }
+      });
+      if (lte || gte) {
+        const queryResultWithPrice = queryResult.map((product) => ({
+          ...product,
+          retailPrice: ((product.markupRate / 100) * product.product.originalPrice) + product.product.originalPrice
+        }))
+          .filter(product => {
+            if (lte && product.retailPrice >= lte) {
+              return false;
+            }
+            if (gte && product.retailPrice <= gte) {
+              return false;
+            }
+            return true;
+          });
+        return queryResultWithPrice
+      }
+
+      return queryResult;
     }
     return await this.prisma.product.findMany({ include: { product: { include: { productType: true, brand: true, vendor: true } } } });
   }
-
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({ where: { id }, include: { product: { include: { productType: true, brand: true, vendor: true } } } });
     if (!product) {

@@ -43,7 +43,7 @@ export class XenditService {
             customer_notification_preference: {
                 "invoice_paid": ["email"],
             },
-            success_redirect_url: `${process.env.FRONTEND_URL}/user/transactions`,
+            success_redirect_url: `${process.env.FRONTEND_URL}/user/    transactions`,
             items: [{
                 name: product.product.name,
                 quantity: buyNowDto.quantity,

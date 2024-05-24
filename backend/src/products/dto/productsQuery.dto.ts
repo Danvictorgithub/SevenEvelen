@@ -1,5 +1,10 @@
 import { Type } from "class-transformer";
-import { IsInt, Min } from "class-validator";
+import { IsEnum, IsInt, IsString, Min, MinLength } from "class-validator";
+
+export enum OrderBy {
+    'asc' = 'asc',
+    'desc' = 'desc',
+}
 
 export class ProductsQuery {
     @Min(0)
@@ -10,4 +15,16 @@ export class ProductsQuery {
     @IsInt()
     @Type(() => Number)
     take: number
+    @Min(1)
+    @IsInt()
+    @Type(() => Number)
+    lte: number
+    @Min(1)
+    @IsInt()
+    @Type(() => Number)
+    gte: number
+    @IsString()
+    name: string
+    @IsEnum(OrderBy)
+    orderBy: string
 }
