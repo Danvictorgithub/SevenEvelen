@@ -26,9 +26,13 @@ export class ProductsService {
   }
   async countAll(query: ProductsQuery) {
     if (query) {
-      const { skip, gte, lte, take, name, orderBy, ...mainQuery } = query;
+
+      const { skip, gte, lte, take, name, orderBy, productTypeId, ...mainQuery } = query;
       if (name) {
         mainQuery['where'] = { product: { name: { contains: name, mode: 'insensitive' } } };
+      }
+      if (productTypeId) {
+        mainQuery['where'] = { product: { productTypeId } };
       }
       return await this.prisma.product.count({ ...mainQuery })
     }
@@ -36,7 +40,8 @@ export class ProductsService {
   }
   async findAll(query: ProductsQuery) {
     if (Object.keys(query).length > 0) {
-      const { lte, gte, orderBy, name, ...mainQuery } = query;
+      console.log("this is called");
+      const { lte, gte, orderBy, name, productTypeId, ...mainQuery } = query;
       if (orderBy) {
         mainQuery['orderBy'] = [{
           product: { originalPrice: orderBy },
@@ -44,6 +49,9 @@ export class ProductsService {
       }
       if (name) {
         mainQuery['where'] = { product: { name: { contains: name, mode: 'insensitive' } } };
+      }
+      if (productTypeId) {
+        mainQuery['where'] = { product: { productTypeId } };
       }
       const queryResult = await this.prisma.product.findMany({
         ...mainQuery, include: { product: { include: { productType: true, brand: true, vendor: true } } }

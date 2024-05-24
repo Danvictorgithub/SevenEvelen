@@ -27,4 +27,8 @@ export class ProductsQuery {
     name: string
     @IsEnum(OrderBy)
     orderBy: string
+    @Min(1)
+    @IsInt()
+    @Type(() => Number)
+    productTypeId: number
 }
