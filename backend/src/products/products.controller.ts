@@ -12,10 +12,13 @@ export class ProductsController {
   create(@Body(new ValidationPipe({ forbidNonWhitelisted: true, whitelist: true })) createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
-
   @Get()
   findAll(@Query(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) query: ProductsQuery) {
     return this.productsService.findAll(query);
+  }
+  @Get('count')
+  countAll(@Query(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) query: ProductsQuery) {
+    return this.productsService.countAll(query);
   }
   @Get('newArrivals')
   newArrivals() {

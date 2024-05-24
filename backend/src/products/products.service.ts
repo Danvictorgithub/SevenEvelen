@@ -24,7 +24,16 @@ export class ProductsService {
       data: createProductDto
     });
   }
-
+  async countAll(query: ProductsQuery) {
+    if (query) {
+      const { skip, gte, lte, take, name, orderBy, ...mainQuery } = query;
+      if (name) {
+        mainQuery['where'] = { product: { name: { contains: name, mode: 'insensitive' } } };
+      }
+      return await this.prisma.product.count({ ...mainQuery })
+    }
+    return await this.prisma.product.count();
+  }
   async findAll(query: ProductsQuery) {
     if (Object.keys(query).length > 0) {
       const { lte, gte, orderBy, name, ...mainQuery } = query;
@@ -58,7 +67,7 @@ export class ProductsService {
 
       return queryResult;
     }
-    return await this.prisma.product.findMany({ include: { product: { include: { productType: true, brand: true, vendor: true } } } });
+    return await this.prisma.product.findMany({ include: { product: { include: { productType: true, brand: true, vendor: true } } }, });
   }
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({ where: { id }, include: { product: { include: { productType: true, brand: true, vendor: true } } } });
