@@ -170,18 +170,18 @@ function removeAll() {
                 @error="imageHandling"
               />
             </NuxtLink>
-            <div
-              class="sm:ml-4 sm:flex sm:w-full sm:justify-between"
-              @click="
-                selectedProducts.find((s) => s == item.id)
-                  ? selectedProducts.splice(
-                      selectedProducts.findIndex((s) => s == item.id),
-                      1
-                    )
-                  : selectedProducts.push(item.id)
-              "
-            >
-              <div class="mt-5 sm:mt-0 flex-1">
+            <div class="sm:ml-4 sm:flex sm:w-full sm:justify-between">
+              <div
+                class="mt-5 sm:mt-0 flex-1"
+                @click="
+                  selectedProducts.find((s) => s == item.id)
+                    ? selectedProducts.splice(
+                        selectedProducts.findIndex((s) => s == item.id),
+                        1
+                      )
+                    : selectedProducts.push(item.id)
+                "
+              >
                 <h2 class="text-lg font-bold text-gray-900">
                   {{ item.product.product.name }}
                 </h2>
