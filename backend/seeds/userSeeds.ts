@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt"
 require('dotenv').config({ path: '../.env' })
 const db = new PrismaClient()
-async function genUser(noUsers: number) {
+export async function userSeeds(noUsers: number) {
     Array.from({ length: noUsers })
         .forEach(async (_, i) => {
             await db.user.create({
@@ -19,4 +19,4 @@ async function genUser(noUsers: number) {
         })
     console.log(`${noUsers} Users generated successfully!`)
 }
-genUser(324);
+// userSeeds(324);

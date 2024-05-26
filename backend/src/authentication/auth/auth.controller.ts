@@ -15,7 +15,7 @@ export class AuthController {
         return this.authService.login(req.user);
     }
     @Post('signup')
-    signup(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+    signup(@Body(new ValidationPipe({ forbidNonWhitelisted: true, whitelist: true })) createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto);
     }
     @Post('logout')

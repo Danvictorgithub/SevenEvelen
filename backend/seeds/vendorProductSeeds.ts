@@ -106,7 +106,7 @@ async function generateCocaColaVendorProducts() {
     }
     console.log("Coca-Cola vendor products generated");
 }
-generateCocaColaVendorProducts()
+// generateCocaColaVendorProducts()
 
 async function generateRandomVendorProducts() {
     const vendors = await db.vendor.findMany();
@@ -131,10 +131,14 @@ async function generateRandomVendorProducts() {
     }
     console.log("Random vendor products generated");
 }
-generateRandomVendorProducts()
-    .catch((error) => {
-        console.error("Error generating vendor products:", error);
-    })
-    .finally(async () => {
-        await db.$disconnect();
-    });
+export async function vendorProductSeeds() {
+    await generateCocaColaVendorProducts()
+    await generateRandomVendorProducts()
+}
+// generateRandomVendorProducts()
+//     .catch((error) => {
+//         console.error("Error generating vendor products:", error);
+//     })
+//     .finally(async () => {
+//         await db.$disconnect();
+//     });

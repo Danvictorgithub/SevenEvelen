@@ -27,7 +27,7 @@ const sevenEleven = {
     }
 };
 
-async function seedProductTypes() {
+export async function categorySeeds() {
     const topLevelTypes = await Promise.all(
         Object.keys(sevenEleven).map(async (categoryName) => {
             return db.productType.create({
@@ -52,10 +52,10 @@ async function seedProductTypes() {
     console.log("Product Types created successfully!");
 }
 
-seedProductTypes()
-    .catch((error) => {
-        console.error("Error creating product types:", error);
-    })
-    .finally(async () => {
-        await db.$disconnect();
-    });
+// categorySeeds()
+//     .catch((error) => {
+//         console.error("Error creating product types:", error);
+//     })
+//     .finally(async () => {
+//         await db.$disconnect();
+//     });

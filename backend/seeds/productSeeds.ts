@@ -3,16 +3,20 @@ import { PrismaClient, Product } from "@prisma/client";
 
 const db = new PrismaClient()
 
-const initProduct = async () => {
+export async function productSeeds(multi: number) {
+    await genProducts(multi);
+    console.log("Finished Generating")
+}
+async function genProducts(multi: number) {
     const vendorProducts = await db.vendorProduct.findMany();
     const stores = await db.store.findMany();
-    stores.forEach(async (store) => {
+    for (const store in stores) {
         const tempVendorProducts = [...vendorProducts];
         const tempStores = [...stores];
 
         const randomVendorProducts = []
         const randomStores = [];
-        const noProducts = Math.floor(Math.random() * 100);
+        const noProducts = Math.floor(Math.random() * multi);
         for (let i = 0; i < noProducts && tempVendorProducts.length > 0; i++) {
             const randomIndex = Math.floor(Math.random() * tempVendorProducts.length);
             const randomVendorProduct = tempVendorProducts[randomIndex];
@@ -42,7 +46,5 @@ const initProduct = async () => {
                 console.log("unique constraint skipped");
             }
         }
-    });
-    console.log("finished generating products");
+    };
 }
-initProduct();

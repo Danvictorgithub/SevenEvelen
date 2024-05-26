@@ -21,15 +21,15 @@ const sevenElevenBrands = [
     { name: "Energizer", image: "https://1000logos.net/wp-content/uploads/2022/06/Energizer-logo.png" }
 ];
 
-async function seedBrands() {
+export async function brandSeeds() {
     const brands = await db.brand.createMany({ data: sevenElevenBrands });
     console.log("Brands created successfully!");
 }
 
-seedBrands()
-    .catch((error) => {
-        console.error("Error creating product types:", error);
-    })
-    .finally(async () => {
-        await db.$disconnect();
-    });
+// brandSeeds()
+//     .catch((error) => {
+//         console.error("Error creating product types:", error);
+//     })
+//     .finally(async () => {
+//         await db.$disconnect();
+//     });

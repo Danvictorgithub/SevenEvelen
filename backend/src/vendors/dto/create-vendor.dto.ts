@@ -1,4 +1,4 @@
-import { IsOptional, Length } from "class-validator";
+import { IsInt, IsOptional, Length } from "class-validator";
 
 export class CreateVendorDto {
     @Length(1, 32)
@@ -6,4 +6,6 @@ export class CreateVendorDto {
     @IsOptional()
     @Length(1)
     image: string
+    @IsInt()
+    userId: number;
 }

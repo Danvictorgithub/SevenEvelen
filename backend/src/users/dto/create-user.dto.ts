@@ -1,5 +1,10 @@
-import { IsEmail, IsPhoneNumber, Length, buildMessage } from "class-validator";
+import { IsEmail, IsEnum, IsPhoneNumber, Length, buildMessage } from "class-validator";
 
+enum userStatus {
+    Admin = "Admin",
+    Customer = "Customer",
+    Vendor = "Vendor"
+}
 export class CreateUserDto {
     @IsEmail()
     email: string;
@@ -11,4 +16,6 @@ export class CreateUserDto {
     // phoneNumber: string;
     @Length(6)
     password: string
+    @IsEnum(userStatus)
+    status: userStatus
 }

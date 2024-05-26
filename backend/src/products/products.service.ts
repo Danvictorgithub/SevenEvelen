@@ -60,7 +60,7 @@ export class ProductsService {
   }
   async findAll(query: ProductsQuery) {
     if (Object.keys(query).length > 0) {
-      const { lte, gte, orderBy, name, productTypeId, take, ...mainQuery } = query;
+      const { lte, gte, orderBy, name, productTypeId, ...mainQuery } = query;
       if (orderBy) {
         mainQuery['orderBy'] = [{
           product: { originalPrice: orderBy },
@@ -89,14 +89,14 @@ export class ProductsService {
             }
             return true;
           });
-        if (take) {
-          return queryResultWithPrice.splice(0, take);
-        }
+        // if (take) {
+        //   return queryResultWithPrice.slice(0, take);
+        // }
         return queryResultWithPrice
       }
-      if (take) {
-        return queryResult.splice(0, take);
-      }
+      // if (take) {
+      //   return queryResult.slice(0, take);
+      // }
       return queryResult
     }
     return await this.prisma.product.findMany({ include: { store: { select: { name: true } }, product: { include: { productType: true, brand: true, vendor: true }, } } });

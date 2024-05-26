@@ -57,7 +57,6 @@ export class BrandsService {
     const isSupabaseUrl = this.supabase.isSupabaseUrl(brand.image);
     if (isSupabaseUrl) {
       const fileName = this.supabase.getFilenameFromSupabaseUrl(brand.image);
-      console.log(fileName)
       await this.supabase.deleteImage(fileName);
     }
     return await this.prisma.brand.delete({ where: { id } });

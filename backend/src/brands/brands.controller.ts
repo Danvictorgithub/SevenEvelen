@@ -3,12 +3,14 @@ import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Roles } from 'src/deocators/roles.decorator';
 
 @Controller('brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) { }
 
   @Post()
+  @Roles()
   @UseInterceptors(FileInterceptor('image'))
   create(
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createBrandDto: CreateBrandDto,

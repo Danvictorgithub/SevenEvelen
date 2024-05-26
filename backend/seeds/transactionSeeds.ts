@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient()
-async function genTransaction(noTransactions: number) {
+export async function transactionSeeds(noTransactions: number) {
     const users = await db.user.findMany();
     const products = await db.product.findMany({ include: { product: true } });
     Array.from({ length: noTransactions })
@@ -27,4 +27,4 @@ async function genTransaction(noTransactions: number) {
     console.log(`${noTransactions} Transactions generated successfully!`)
 }
 
-genTransaction(1000);
+// transactionSeeds(1000);

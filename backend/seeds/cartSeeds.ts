@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient()
-async function genCart(noCart: number) {
+export async function cartSeeds(noCart: number) {
     const users = await db.user.findMany();
     const products = await db.product.findMany({ include: { product: true } });
     Array.from({ length: noCart })
@@ -20,7 +20,12 @@ async function genCart(noCart: number) {
                     }
                 })
                 if (!checkConstraint) {
-                    await db.cartItem.create({ data: { userId: randomUser.id, productId: product.id, quantity: Math.floor(Math.random() * (product.stock * .30) + 1) } })
+                    try {
+                        await db.cartItem.create({ data: { userId: randomUser.id, productId: product.id, quantity: Math.floor(Math.random() * (product.stock * .30) + 1) } })
+                    }
+                    catch (e) {
+                        console.log("unique constraint skipped")
+                    }
                 }
 
             })
@@ -42,4 +47,4 @@ async function genCart(noCart: number) {
     console.log(`${noCart} Carts generated successfully!`)
 }
 
-genCart(1000);
+cartSeeds(1000);
