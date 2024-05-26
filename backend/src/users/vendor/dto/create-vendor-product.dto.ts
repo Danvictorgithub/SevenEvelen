@@ -1,4 +1,5 @@
-import { IsInt, IsNumber, IsObject, IsOptional, IsString, Length } from "class-validator";
+import { Type } from "class-transformer";
+import { IsIn, IsInt, IsNumber, IsObject, IsOptional, IsString, Length } from "class-validator";
 
 export class CreateVendorProductDto {
     @IsString()
@@ -13,13 +14,17 @@ export class CreateVendorProductDto {
     @IsString()
     @Length(1, 32)
     size: string
-    @IsString()
+    @IsInt()
+    @Type(() => Number)
     originalPrice: number;
-    @IsString()
+    @IsInt()
+    @Type(() => Number)
     brandId: number;
-    @IsString()
+    @IsInt()
+    @IsOptional()
+    @Type(() => Number)
     vendorId: number;
-    @IsString()
+    @IsInt()
+    @Type(() => Number)
     productTypeId: number
-
 }

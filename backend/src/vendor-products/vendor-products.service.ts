@@ -11,6 +11,19 @@ export class VendorProductsService {
     if (image) {
       createVendorProductDto.image = await this.supabase.uploadImage(image);
     }
+    const brand = await this.prisma.brand.findUnique({ where: { id: createVendorProductDto.brandId } });
+    if (!brand) {
+      throw new NotFoundException("Brand not found");
+    }
+    const category = await this.prisma.productType.findUnique({ where: { id: createVendorProductDto.productTypeId } });
+
+    if (!category) {
+      throw new NotFoundException("Category not found");
+    }
+    const vendor = await this.prisma.vendor.findUnique({ where: { id: createVendorProductDto.vendorId } });
+    if (!vendor) {
+      throw new NotFoundException("Vendor not found");
+    }
     return this.prisma.vendorProduct.create({ data: createVendorProductDto });
   }
 
@@ -34,6 +47,24 @@ export class VendorProductsService {
     if (image) {
       updateVendorProductDto.image = await this.supabase.uploadImage(image);
       this.supabase.deleteImage(vendorProduct.image)
+    }
+    if (updateVendorProductDto.brandId) {
+      const brand = await this.prisma.brand.findUnique({ where: { id: updateVendorProductDto.brandId } });
+      if (!brand) {
+        throw new NotFoundException("Brand not found");
+      }
+    }
+    if (updateVendorProductDto.productTypeId) {
+      const category = await this.prisma.productType.findUnique({ where: { id: updateVendorProductDto.productTypeId } });
+      if (!category) {
+        throw new NotFoundException("Category not found");
+      }
+    }
+    if (updateVendorProductDto.vendorId) {
+      const vendor = await this.prisma.vendor.findUnique({ where: { id: updateVendorProductDto.vendorId } });
+      if (!vendor) {
+        throw new NotFoundException("Vendor not found");
+      }
     }
     return this.prisma.vendorProduct.update({ where: { id }, data: updateVendorProductDto });
   }
