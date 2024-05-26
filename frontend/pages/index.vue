@@ -70,8 +70,6 @@ async function getMoreProducts() {
   }
 }
 useInfiniteScroll(el, await getMoreProducts, { distance: 200 });
-
-const successCart = cartModal();
 </script>
 <template>
   <div class="h-screen overflow-scroll" ref="el">
@@ -256,14 +254,7 @@ const successCart = cartModal();
           bar
         </p>
       </section>
-      <UModal v-model="successCart">
-        <div class="text-center p-4">
-          <p>
-            <Icon name="solar:cart-outline" class="text-7xl text-slate-800" />
-          </p>
-          <p class="p-4 font-bold text-green-500">Successfully Added to Cart</p>
-        </div>
-      </UModal>
+      <CartModal />
     </main>
     <Footer />
   </div>

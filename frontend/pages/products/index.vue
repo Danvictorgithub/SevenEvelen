@@ -119,6 +119,7 @@ useInfiniteScroll(el, await getMoreProducts, { distance: 200 });
   <div class="h-screen overflow-scroll" ref="el">
     <Header />
     <main class="min-h-svh bg-white">
+      <CartModal />
       <section class="container mx-auto my-12 flex">
         <div
           class="w-[300px] bg-white fixed lg:static h-full top-0 left-0 overflow-scroll duration-200"

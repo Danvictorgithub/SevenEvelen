@@ -4,6 +4,6 @@ export class BuyNowDto {
     @IsInt()
     productId: number;
     @IsInt()
-    @Min(0)
+    @Min(1)
     quantity: number
 }

@@ -1,4 +1,4 @@
-export default async function (e: Event) {
+export default async function (e: Event, quantity: number | null = null, id: number | null = null) {
     const API = useRuntimeConfig().public.API;
     const { status, token } = useAuth();
     if (status.value === 'unauthenticated') {
@@ -9,8 +9,8 @@ export default async function (e: Event) {
         method: 'POST',
         headers: { Authorization: token.value as string },
         body: JSON.stringify({
-            productId: parseInt(HTMLButton.id),
-            quantity: 1
+            productId: id ? id : parseInt(HTMLButton.id),
+            quantity: (quantity) ? quantity : 1
         })
     }).catch(e => {
         if (e.data) {

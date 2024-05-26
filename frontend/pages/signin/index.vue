@@ -103,7 +103,7 @@ async function signin() {
                 <button
                   @click="signin"
                   type="button"
-                  class="w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-green-500 rounded-lg hover:bg-green-400 focus:outline-none focus:bg-green-400 focus:ring focus:ring-green-300 focus:ring-opacity-50"
+                  class="flex items-center gap-4 w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-green-500 rounded-lg hover:bg-green-400 focus:outline-none focus:bg-green-400 focus:ring focus:ring-green-300 focus:ring-opacity-50"
                 >
                   <Icon name="eos-icons:loading" v-if="loading" />
                   Sign in
