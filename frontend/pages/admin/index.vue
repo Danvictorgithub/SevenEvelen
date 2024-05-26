@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const API = useRuntimeConfig().public.API;
 const { token } = useAuth();
+await authorize("Admin");
+
 const { data: locations } = await useFetch(`${API}/stores/locations`, {
   headers: {
     Authorization: token.value as string,

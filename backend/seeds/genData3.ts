@@ -9,7 +9,7 @@ import { vendorProductSeeds } from "./vendorProductSeeds";
 import { vendorSeeds } from "./vendorSeeds";
 
 async function generateSeeds3() {
-    await transactionSeeds(500)
+    // await transactionSeeds(500)
     await cartSeeds(250)
     // await transactionSeeds(1000)
 }

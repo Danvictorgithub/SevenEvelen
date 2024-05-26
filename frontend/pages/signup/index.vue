@@ -12,6 +12,7 @@ const credentials = reactive({
   // phoneNumber: "",
   email: "",
   password: "",
+  status: "Customer",
 });
 const confirmPassword = ref("");
 const showPassword = ref(false);
@@ -84,12 +85,16 @@ async function signup() {
             begin shopping.
           </p>
 
-          <!-- <div class="mt-6">
+          <div class="mt-6">
             <h1 class="text-gray-500">Select type of account</h1>
 
             <div class="mt-3 md:flex md:items-center md:-mx-2">
               <button
-                class="flex justify-center w-full px-6 py-3 text-white bg-green-500 rounded-lg md:w-auto md:mx-2 focus:outline-none"
+                class="flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none border border-green-500 text-green-500"
+                :class="{
+                  'bg-green-500 text-white': credentials.status == 'Customer',
+                }"
+                @click="credentials.status = 'Customer'"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -106,10 +111,14 @@ async function signup() {
                   />
                 </svg>
 
-                <span class="mx-2"> client </span>
+                <span class="mx-2"> Customer </span>
               </button>
 
               <button
+                :class="{
+                  'bg-green-500 text-white': credentials.status == 'Vendor',
+                }"
+                @click="credentials.status = 'Vendor'"
                 class="flex justify-center w-full px-6 py-3 mt-4 text-green-500 border border-green-500 rounded-lg md:mt-0 md:w-auto md:mx-2 focus:outline-none"
               >
                 <svg
@@ -127,10 +136,10 @@ async function signup() {
                   />
                 </svg>
 
-                <span class="mx-2"> worker </span>
+                <span class="mx-2"> Vendor </span>
               </button>
             </div>
-          </div> -->
+          </div>
 
           <form class="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2">
             <div>
