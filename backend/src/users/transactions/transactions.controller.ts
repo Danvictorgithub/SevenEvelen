@@ -6,7 +6,7 @@ import { transactionQueryDto } from './dto/transactionQuery.dto';
 import { JwtAuthGuard } from 'src/authentication/auth/jwt.auth.guard';
 import { User } from '@prisma/client';
 
-@Controller('user-transactions')
+@Controller('user_transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) { }
 

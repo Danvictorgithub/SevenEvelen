@@ -1,5 +1,24 @@
 <script setup lang="ts">
 const API = useRuntimeConfig().public.API;
+const { token } = useAuth();
+await authorize();
+const page = ref(1);
+const computedQuery = computed(() => {
+  return {
+    page: page.value,
+    take: 5,
+  };
+});
+const { data: transactions } = await useFetch<{
+  transactions: Array<TransactionType>;
+  maxPage: number;
+  transactionCount: number;
+}>(`${API}/user_transactions`, {
+  headers: {
+    Authorization: token.value as string,
+  },
+  query: computedQuery,
+});
 </script>
 <template>
   <Header />
@@ -82,13 +101,23 @@ const API = useRuntimeConfig().public.API;
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr>
+                  <tr v-for="transaction in transactions?.transactions">
                     <td class="px-4 py-4 text-sm font-medium whitespace-nowrap">
                       <div>
-                        <h2 class="font-medium text-gray-800">Catalog</h2>
-                        <p class="text-sm font-normal text-gray-600">
-                          catalogapp.io
-                        </p>
+                        <div
+                          class="text-gray-800"
+                          v-for="item in transaction.transactionItems"
+                        >
+                          <NuxtLink
+                            :to="`/products/${item.product.id}`"
+                            class="font-medium"
+                          >
+                            {{ item.product.product.name }}
+                            <span class="font-normal"
+                              >x {{ item.quantity }}</span
+                            >
+                          </NuxtLink>
+                        </div>
                       </div>
                     </td>
                     <td
@@ -96,39 +125,38 @@ const API = useRuntimeConfig().public.API;
                     >
                       <div class="flex items-center">
                         <img
+                          v-for="(
+                            item, i
+                          ) in transaction.transactionItems.slice(0, 4)"
                           class="object-cover w-6 h-6 -mx-1 border-2 border-white rounded-full shrink-0"
-                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80"
-                          alt=""
+                          :src="item.product.product.image"
+                          @error="imageHandling"
+                          :alt="i.toString()"
+                          :key="i"
                         />
-                        <img
-                          class="object-cover w-6 h-6 -mx-1 border-2 border-white rounded-full shrink-0"
-                          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80"
-                          alt=""
-                        />
-                        <img
-                          class="object-cover w-6 h-6 -mx-1 border-2 border-white rounded-full shrink-0"
-                          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1256&q=80"
-                          alt=""
-                        />
-                        <img
-                          class="object-cover w-6 h-6 -mx-1 border-2 border-white rounded-full shrink-0"
-                          src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80"
-                          alt=""
-                        />
+
                         <p
-                          class="flex items-center justify-center w-6 h-6 -mx-1 text-xs text-blue-600 bg-blue-100 border-2 border-white rounded-full"
+                          v-if="transaction.transactionItems.length > 4"
+                          class="flex items-center justify-center w-6 h-6 -mx-1 text-xs text-green-600 bg-green-100 border-2 border-white rounded-full"
                         >
-                          +4
+                          +{{ transaction.transactionItems.length - 4 }}
                         </p>
                       </div>
                     </td>
                     <td class="px-4 py-4 text-sm whitespace-nowrap">
                       <div>
-                        <p class="text-gray-500">₱69420</p>
+                        <p class="text-gray-500">
+                          ₱{{ transaction.totalAmount.toFixed(2) }}
+                        </p>
                       </div>
                     </td>
                     <td class="px-4 py-4 text-sm whitespace-nowrap">
-                      {{ Date.now() }}
+                      <NuxtTime
+                        :datetime="Date.now()"
+                        month="long"
+                        day="numeric"
+                        year="numeric"
+                      />
                     </td>
                   </tr>
                 </tbody>
@@ -138,89 +166,13 @@ const API = useRuntimeConfig().public.API;
         </div>
       </div>
 
-      <div class="flex items-center justify-between mt-6">
-        <a
-          href="#"
-          class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 :bg-gray-800"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-5 h-5 rtl:-scale-x-100"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-            />
-          </svg>
-
-          <span> previous </span>
-        </a>
-
-        <div class="items-center hidden md:flex gap-x-3">
-          <a
-            href="#"
-            class="px-2 py-1 text-sm text-blue-500 rounded-md bg-blue-100/60"
-            >1</a
-          >
-          <a
-            href="#"
-            class="px-2 py-1 text-sm text-gray-500 rounded-md :bg-gray-800 hover:bg-gray-100"
-            >2</a
-          >
-          <a
-            href="#"
-            class="px-2 py-1 text-sm text-gray-500 rounded-md :bg-gray-800 hover:bg-gray-100"
-            >3</a
-          >
-          <a
-            href="#"
-            class="px-2 py-1 text-sm text-gray-500 rounded-md :bg-gray-800 hover:bg-gray-100"
-            >...</a
-          >
-          <a
-            href="#"
-            class="px-2 py-1 text-sm text-gray-500 rounded-md :bg-gray-800 hover:bg-gray-100"
-            >12</a
-          >
-          <a
-            href="#"
-            class="px-2 py-1 text-sm text-gray-500 rounded-md :bg-gray-800 hover:bg-gray-100"
-            >13</a
-          >
-          <a
-            href="#"
-            class="px-2 py-1 text-sm text-gray-500 rounded-md :bg-gray-800 hover:bg-gray-100"
-            >14</a
-          >
-        </div>
-
-        <a
-          href="#"
-          class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 :bg-gray-800"
-        >
-          <span> Next </span>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-5 h-5 rtl:-scale-x-100"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-            />
-          </svg>
-        </a>
-      </div>
+      <UPagination
+        v-model="page"
+        :total="transactions?.transactionCount"
+        :page-count="5"
+        :max="transactions?.maxPage"
+        class="mt-4"
+      />
     </section>
   </main>
   <Footer />

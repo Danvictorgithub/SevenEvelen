@@ -113,7 +113,10 @@ async function submitQuery() {
               <Icon name="material-symbols:account-circle" class="text-3xl" />
               <p class="text-lg">Profile</p>
             </NuxtLink>
-            <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
+            <NuxtLink
+              to="/user/transactions/"
+              class="flex gap-2 text p-2 hover:bg-slate-100"
+            >
               <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
               <p class="text-lg">Transactions</p>
             </NuxtLink>
@@ -192,7 +195,10 @@ async function submitQuery() {
           <Icon name="material-symbols:account-circle" class="text-3xl" />
           <p class="text-lg">Profile</p>
         </NuxtLink>
-        <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
+        <NuxtLink
+          to="/user/transactions/"
+          class="flex gap-2 text p-2 hover:bg-slate-100"
+        >
           <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
           <p class="text-lg">Transactions</p>
         </NuxtLink>

@@ -17,10 +17,10 @@ export class TransactionsService {
       if (!query.page || !query.take) {
         throw new BadRequestException('Page and take query parameters are required')
       }
-      const transactions = await this.prisma.transaction.findMany({ where: { userId: user.id }, skip: (query.page - 1) * query.take, take: query.take });
+      const transactions = await this.prisma.transaction.findMany({ where: { userId: user.id }, include: { transactionItems: { include: { product: { include: { product: true } } } } }, skip: (query.page - 1) * query.take, take: query.take });
       // const maxPage = Math.floor(await this.prisma.transaction.count({ where: { userId: user.id } }) / query.take)
-      const transactionCount = await this.prisma.transaction.findMany({ where: { userId: user.id } });
-      const maxPage = Math.floor(transactionCount.length / query.take);
+      const transactionCount = await this.prisma.transaction.count({ where: { userId: user.id } });
+      const maxPage = Math.floor(transactionCount / query.take);
       return { transactions, maxPage: maxPage == 0 ? 1 : maxPage, transactionCount };
     }
     const transactions = await this.prisma.transaction.findMany({ where: { userId: user.id } });

@@ -119,7 +119,7 @@ async function generateRandomVendorProducts() {
         await db.vendorProduct.create({
             data: {
                 name: faker.commerce.productName(),
-                image: faker.image.urlLoremFlickr({ category: productType.name }),
+                image: faker.image.urlLoremFlickr({ category: productType.name.split(' ').join('-') }),
                 upcCode: faker.string.numeric(12),
                 size: `${faker.number.int({ min: 10, max: 5000 })} g`,
                 originalPrice: faker.number.float({ min: 1, max: 100 }),
