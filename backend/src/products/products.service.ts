@@ -34,14 +34,33 @@ export class ProductsService {
       if (productTypeId) {
         mainQuery['where'] = { product: { productTypeId } };
       }
+      if (lte || gte) {
+        const queryResult = await this.prisma.product.findMany({
+          ...mainQuery, include: { product: { include: { productType: true, brand: true, vendor: true } } }
+        });
+        const queryResultWithPrice = queryResult.map((product) => ({
+          ...product,
+          retailPrice: ((product.markupRate / 100) * product.product.originalPrice) + product.product.originalPrice
+        }))
+          .filter(product => {
+            if (lte && product.retailPrice >= lte) {
+              return false;
+            }
+            if (gte && product.retailPrice <= gte) {
+              return false;
+            }
+            return true;
+          });
+        console.log(queryResultWithPrice)
+        return queryResultWithPrice.length
+      }
       return await this.prisma.product.count({ ...mainQuery })
     }
     return await this.prisma.product.count();
   }
   async findAll(query: ProductsQuery) {
     if (Object.keys(query).length > 0) {
-      console.log("this is called");
-      const { lte, gte, orderBy, name, productTypeId, ...mainQuery } = query;
+      const { lte, gte, orderBy, name, productTypeId, take, ...mainQuery } = query;
       if (orderBy) {
         mainQuery['orderBy'] = [{
           product: { originalPrice: orderBy },
@@ -54,7 +73,7 @@ export class ProductsService {
         mainQuery['where'] = { product: { productTypeId } };
       }
       const queryResult = await this.prisma.product.findMany({
-        ...mainQuery, include: { product: { include: { productType: true, brand: true, vendor: true } } }
+        ...mainQuery, include: { store: { select: { name: true } }, product: { include: { productType: true, brand: true, vendor: true }, } }
       });
       if (lte || gte) {
         const queryResultWithPrice = queryResult.map((product) => ({
@@ -70,12 +89,17 @@ export class ProductsService {
             }
             return true;
           });
+        if (take) {
+          return queryResultWithPrice.splice(0, take);
+        }
         return queryResultWithPrice
       }
-
-      return queryResult;
+      if (take) {
+        return queryResult.splice(0, take);
+      }
+      return queryResult
     }
-    return await this.prisma.product.findMany({ include: { product: { include: { productType: true, brand: true, vendor: true } } }, });
+    return await this.prisma.product.findMany({ include: { store: { select: { name: true } }, product: { include: { productType: true, brand: true, vendor: true }, } } });
   }
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({ where: { id }, include: { product: { include: { productType: true, brand: true, vendor: true } } } });

@@ -5,6 +5,11 @@ const showMenu = ref(false);
 const showCategories = ref(false);
 const API = useRuntimeConfig().public.API;
 const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
+const query = ref({ name: "" });
+
+async function submitQuery() {
+  await navigateTo(`/products?name=${query.value.name}&take=10`);
+}
 </script>
 <template>
   <header class="border-b bg-white">
@@ -30,6 +35,8 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
       </div>
       <div class="relative text-gray-600 flex-1 w-full">
         <input
+          @keydown.enter="submitQuery"
+          v-model="query.name"
           class="w-full border bg-white h-10 px-5 rounded-lg text-sm focus:outline-none"
           type="search"
           name="search"
@@ -100,7 +107,7 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
             class="hidden lg:block absolute top-10 right-0 bg-white border rounded-b-xl overflow-hidden"
             v-if="showMenu"
           >
-            <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
+            <NuxtLink to="/user" class="flex gap-2 text p-2 hover:bg-slate-100">
               <Icon name="material-symbols:account-circle" class="text-3xl" />
               <p class="text-lg">Profile</p>
             </NuxtLink>
@@ -179,7 +186,7 @@ const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
           <Icon name="material-symbols:arrow-right-alt" class="text-3xl my-6" />
           <p class="text-lg font-medium"></p>
         </button>
-        <NuxtLink class="flex gap-2 text p-2 hover:bg-slate-100">
+        <NuxtLink to="/user" class="flex gap-2 text p-2 hover:bg-slate-100">
           <Icon name="material-symbols:account-circle" class="text-3xl" />
           <p class="text-lg">Profile</p>
         </NuxtLink>

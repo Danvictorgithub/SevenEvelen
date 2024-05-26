@@ -15,11 +15,11 @@ export class ProductsQuery {
     @IsInt()
     @Type(() => Number)
     take: number
-    @Min(1)
+    @Min(0)
     @IsInt()
     @Type(() => Number)
     lte: number
-    @Min(1)
+    @Min(0)
     @IsInt()
     @Type(() => Number)
     gte: number

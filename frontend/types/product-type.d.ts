@@ -2,6 +2,10 @@ declare interface ProductType {
     id: number;
     markupRate: number;
     stock: number;
+    store: {
+        name: string;
+        image: string;
+    };
     product: {
         name: string;
         image: string;
@@ -17,6 +21,7 @@ declare interface ProductType {
             name: string;
             image: string;
         };
+
     };
     userCart: number;
 }

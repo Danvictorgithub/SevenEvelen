@@ -2,17 +2,20 @@
 defineProps<{ product: ProductType }>();
 </script>
 <template>
-  <div class="max-w-2xl" :key="product.id">
-    <div class="bg-white border rounded-xl max-w-sm">
-      <NuxtLink :to="`/products/${product.id}`">
+  <div class="mt-4" :key="product.id">
+    <div class="bg-white border rounded-xl flex gap-4">
+      <NuxtLink
+        :to="`/products/${product.id}`"
+        class="flex-1 shrink-0 min-h-[174px] flex items-center justify-center max-w-[367px]"
+      >
         <img
-          class="rounded-xl overflow-hidden border h-[334px] flex items-center justify-center object-cover w-full"
+          class="rounded-xl overflow-hidden border h-auto lg:h-[334px] flex items-center justify-center object-cover w-full"
           :src="product.product.image"
           alt="product image"
           @error="imageHandling"
         />
       </NuxtLink>
-      <div class="px-5 py-5">
+      <div class="px-5 py-5 flex flex-col flex-1">
         <NuxtLink :to="`/products/${product.id}`">
           <h3
             class="text-gray-900 font-semibold text-sm lg:text-xl tracking-tight truncate"
@@ -20,10 +23,20 @@ defineProps<{ product: ProductType }>();
             {{ product.product.name }}
           </h3>
         </NuxtLink>
-
-        <div
-          class="flex flex-col lg:flex-row items-center justify-between mt-4"
-        >
+        <p class="mt-4 font-medium">
+          {{ product.product.productType.name }}
+        </p>
+        <p class="mt-4 font-bold text-xl">
+          {{ product.product.brand.name }}
+        </p>
+        <p class="mt-4 font-normal text-lg">
+          From: {{ product.product.vendor.name }}
+        </p>
+        <p class="mt-4 font-normal">
+          <span class="font-bold text-black">Branch:</span>
+          {{ product.store.name }}
+        </p>
+        <div class="mt-4 flex-1 flex flex-col justify-end items-end">
           <p class="text-base lg:text-3xl font-bold text-gray-900">
             ₱{{ retailPrice(product) }}
           </p>

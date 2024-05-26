@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { Category } from "./Header.vue";
-
 defineProps({
-  productTypes: { type: Array<Category> },
+  productTypes: { type: Array<CategoryType> },
 });
 </script>
 <template>

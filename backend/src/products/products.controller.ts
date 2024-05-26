@@ -13,7 +13,7 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
   @Get()
-  findAll(@Query(new ValidationPipe({ skipUndefinedProperties: true, whitelist: true, forbidNonWhitelisted: true })) query: ProductsQuery) {
+  findAll(@Query(new ValidationPipe({ skipUndefinedProperties: true, skipNullProperties: true, whitelist: true, forbidNonWhitelisted: true })) query: ProductsQuery) {
     return this.productsService.findAll(query);
   }
   @Get('count')

@@ -36,7 +36,7 @@ export class CategoryService {
   private async fetchParentCategory(category: ProductType) {
     if (category.productTypeParentId) {
       const parent = await this.prisma.productType.findUnique({ where: { id: category.productTypeParentId } });
-      return { ...category, product: parent }
+      return { ...category, productTypes: parent }
     }
     return category;
   }
