@@ -11,6 +11,9 @@ export class CartService {
     if (!product) {
       throw new NotFoundException("Product not found");
     }
+    if (product.stock <= 0) {
+      throw new BadRequestException("Product out of stock");
+    }
     const user = await this.prisma.user.findUnique({ where: { id: createCartDto.userId } });
     if (!user) {
       throw new NotFoundException("User not found");

@@ -233,6 +233,12 @@ useInfiniteScroll(el, await getMoreProducts, { distance: 200 });
                   <span class="font-bold">{{ dealProduct?.stock }}</span>
                 </p>
               </div>
+              <p
+                class="text-center font-bold text-3xl text-gray-500"
+                v-if="dealProduct!.stock <= 0"
+              >
+                Sold Out
+              </p>
             </div>
           </div>
         </div>
