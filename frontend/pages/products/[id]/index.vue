@@ -54,7 +54,9 @@ const loading = loadingStore();
       <div
         class="md:flex md:items-center min-h-[calc(100svh-300px)] md:justify-between items-center max-w-[1000px] gap-24 mx-auto"
       >
-        <div class="aspect-square max-w-[512px] w-full md:w-[512px] mx-auto">
+        <div
+          class="aspect-square max-w-[512px] w-full md:w-[512px] mx-auto h-full"
+        >
           <img
             class="h-full w-full rounded-md object-contain max-w-lg mx-auto border flex justify-center items-center text-center"
             :src="product?.product.image"

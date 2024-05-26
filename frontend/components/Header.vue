@@ -4,7 +4,9 @@ const cart = cartNumber();
 const showMenu = ref(false);
 const showCategories = ref(false);
 const API = useRuntimeConfig().public.API;
-const { data: categories } = await useFetch<Array<Category>>(`${API}/category`);
+const { data: categories } = await useFetch<Array<CategoryType>>(
+  `${API}/category`
+);
 const query = ref({ name: "" });
 
 async function submitQuery() {
@@ -30,7 +32,7 @@ async function submitQuery() {
           >
             categories<Icon name="ion:md-arrow-dropdown" />
           </p>
-          <Category :product-types="categories as Category[]" />
+          <Category :product-types="categories as CategoryType[]" />
         </div>
       </div>
       <div class="relative text-gray-600 flex-1 w-full">
@@ -160,7 +162,7 @@ async function submitQuery() {
           <p class="text-lg font-medium text-center">Categories</p>
         </button>
 
-        <MobileCategory :product-types="categories as Category[]" />
+        <MobileCategory :product-types="categories as CategoryType[]" />
       </div>
     </div>
     <!-- Mobile Modal Profile -->

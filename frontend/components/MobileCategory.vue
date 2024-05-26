@@ -1,19 +1,25 @@
 <script lang="ts" setup>
-import type { Category } from "./Header.vue";
-
 defineProps({
-  productTypes: { type: Array<Category> },
+  productTypes: { type: Array<CategoryType> },
 });
+function categoryLink(id: number) {
+  return `/products?productTypeId=${id}&take=10`;
+}
 </script>
 
 <template>
   <div class="" v-for="category in productTypes">
-    <p class="font-bold p-4">{{ category.name }}</p>
-    <div
-      class="bg-slate-100 px-8 py-4"
-      v-for="subCategory in category.productTypes"
-    >
-      <p>{{ subCategory.name }}</p>
+    <NuxtLink :to="categoryLink(category.id)" class="">
+      <p class="font-bold p-4 hover:bg-green-400 hover:text-white">
+        {{ category.name }}
+      </p>
+    </NuxtLink>
+    <div class="bg-slate-100" v-for="subCategory in category.productTypes">
+      <NuxtLink :to="categoryLink(category.id)">
+        <p class="hover:bg-green-400 hover:text-white px-8 py-4">
+          {{ subCategory.name }}
+        </p>
+      </NuxtLink>
     </div>
   </div>
 </template>
