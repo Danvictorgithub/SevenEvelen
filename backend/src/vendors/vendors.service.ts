@@ -14,12 +14,12 @@ export class VendorsService {
       createVendorDto.image = await this.supabase.uploadImage(image);
     }
     if (createVendorDto.userId) {
-      const user = await this.prisma.user.findUnique({ where: { id: createVendorDto.userId } });
+      const user = await this.prisma.user.findUnique({ where: { id: createVendorDto.userId }, include: { vendor: true } });
       if (!user) { throw new NotFoundException("User not found"); }
       if (user.status !== 'Vendor') {
         throw new NotFoundException("User is not a Vendor");
       }
-      if (user.vendorId) {
+      if (user.vendor) {
         throw new NotFoundException("User is already a Vendor");
       }
     }

@@ -29,7 +29,6 @@ model User {
   updatedAt DateTime @updatedAt
   // phoneNumber String @unique
   vendor Vendor?
-  vendorId Int? @unique
   cart CartItem[]
   transactions Transaction[]
 }

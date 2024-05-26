@@ -10,11 +10,11 @@ import { UpdateVendorProductDto } from './dto/update-vendor-product.dto';
 export class VendorService {
   constructor(private readonly prisma: PrismaService, private readonly supabase: SupabaseService) { }
   async create(createVendorDto: CreateVendorDto, image: Express.Multer.File | null) {
-    const user = await this.prisma.user.findUnique({ where: { id: createVendorDto.userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: createVendorDto.userId }, include: { vendor: true } });
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    if (user.vendorId) {
+    if (user.vendor) {
       throw new BadRequestException("User is already a vendor");
     }
     if (image) {
@@ -27,6 +27,13 @@ export class VendorService {
   }
 
   async findSelf(userId: number) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    if (!user.vendor) {
+      throw new NotFoundException("Vendor doesn't have a profile");
+    }
     return await this.prisma.vendor.findUnique({ where: { userId } });
   }
 
@@ -47,39 +54,39 @@ export class VendorService {
     return updatedVendor;
   }
   async findAllProducts(userId: number) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    if (!user.vendorId) {
+    if (!user.vendor) {
       throw new BadRequestException("Vendor doesn't have a profile");
     }
-    const vendorProducts = await this.prisma.vendorProduct.findMany({ where: { vendorId: user.vendorId } });
+    const vendorProducts = await this.prisma.vendorProduct.findMany({ where: { vendorId: user.vendor.id } });
     return vendorProducts;
   }
   async findOneProduct(userId: number, id: number) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    if (!user.vendorId) {
+    if (!user.vendor) {
       throw new BadRequestException("Vendor doesn't have a profile");
     }
-    const vendorProduct = await this.prisma.vendorProduct.findUnique({ where: { vendorId: user.vendorId, id } });
+    const vendorProduct = await this.prisma.vendorProduct.findUnique({ where: { vendorId: user.vendor.id, id } });
     if (!vendorProduct) {
       throw new NotFoundException("Vendor Product Not Found");
     }
     return vendorProduct;
   }
   async createVendorProduct(userId: number, createVendorProductDto: CreateVendorProductDto, image: Express.Multer.File) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    if (!user.vendorId) {
+    if (!user.vendor) {
       throw new BadRequestException("Vendor doesn't have a profile");
     }
-    createVendorProductDto.vendorId = user.vendorId;
+    createVendorProductDto.vendorId = user.vendor.id;
     if (image) {
       createVendorProductDto.image = await this.supabase.uploadImage(image);
     }
@@ -95,15 +102,15 @@ export class VendorService {
     return newVendorProduct;
   }
   async updateVendorProduct(userId: number, updateVendorProductDto: UpdateVendorProductDto, image: Express.Multer.File, id: number) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    if (!user.vendorId) {
+    if (!user.vendor) {
       throw new BadRequestException("Vendor doesn't have a profile");
     }
-    updateVendorProductDto.vendorId = user.vendorId;
-    const vendorProduct = await this.prisma.vendorProduct.findUnique({ where: { vendorId: user.vendorId, id } });
+    updateVendorProductDto.vendorId = user.vendor.id;
+    const vendorProduct = await this.prisma.vendorProduct.findUnique({ where: { vendorId: user.vendor.id, id } });
     if (!vendorProduct) {
       throw new NotFoundException("Vendor Product Not Found");
     }
@@ -127,14 +134,14 @@ export class VendorService {
     return updatedVendorProduct;
   }
   async deleteVendorProduct(userId: number, id: number) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    if (!user.vendorId) {
+    if (!user.vendor) {
       throw new BadRequestException("Vendor doesn't have a profile")
     }
-    const vendorProduct = await this.prisma.vendorProduct.findUnique({ where: { id, vendorId: user.vendorId } });
+    const vendorProduct = await this.prisma.vendorProduct.findUnique({ where: { id, vendorId: user.vendor.id } });
     if (!vendorProduct) {
       throw new NotFoundException("Vendor Product Not Found");
     }
