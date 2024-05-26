@@ -146,6 +146,12 @@ const loading = loadingStore();
               </svg>
             </button>
           </div>
+          <p
+            class="text-center font-bold text-3xl text-gray-500 p-4"
+            v-if="product!.stock <= 0"
+          >
+            Sold Out
+          </p>
         </div>
       </div>
     </div>
