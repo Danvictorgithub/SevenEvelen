@@ -8,6 +8,15 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'light',
   },
+  app: {
+    head: {
+      title: "Seven Evelen",
+      link: [
+        { rel: "icon", type: "image/x-icon", href: "logo.png" }
+      ],
+    },
+  },
+
   // imports: {
   //   presets: [
   //     {

@@ -1,6 +1,12 @@
 export default async function setLoading(callback: Function, id: number = 0) {
     const loading = loadingStore();
+    if (loading.value.loading) return;
     loading.value.loading = true;
-    await callback();
+    try {
+        await callback();
+    }
+    catch (e) {
+
+    }
     loading.value.loading = false;
 }

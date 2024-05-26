@@ -47,7 +47,7 @@ const loading = loadingStore();
 <template>
   <Header />
 
-  <main class="my-8">
+  <main class="my-8 min-h-svh">
     <CartModal />
     <ErrorModal />
     <div class="container mx-auto px-6">

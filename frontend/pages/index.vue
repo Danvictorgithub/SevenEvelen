@@ -18,7 +18,7 @@ const skip = ref(0);
 const take = ref(10);
 const limit = ref(100);
 const endFetch = ref(false);
-
+const loading = loadingStore();
 const { data: products } = await useFetch<Array<ProductType>>(
   `${API}/products`,
   {
@@ -217,10 +217,15 @@ useInfiniteScroll(el, await getMoreProducts, { distance: 200 });
                 ₱{{ retailPrice(dealProduct as ProductType) }}
               </p>
               <button
-                @click="addToCart"
+                @click="
+                  setLoading(async function () {
+                    await addToCart($event);
+                  })
+                "
                 :id="dealProduct?.id.toString()"
-                class="bg-green-500 text-base lg:text-lg rounded-xl p-3 text-white font-bold duration-200 hover:bg-green-600"
+                class="items-center bg-green-500 text-base lg:text-lg rounded-xl p-3 text-white font-bold duration-200 hover:bg-green-600"
               >
+                <Icon name="eos-icons:loading" v-if="loading.loading" />
                 Add To Cart
               </button>
               <div class="flex items-center justify-between p-4">

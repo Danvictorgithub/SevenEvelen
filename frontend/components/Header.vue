@@ -12,6 +12,10 @@ const query = ref({ name: "" });
 async function submitQuery() {
   await navigateTo(`/products?name=${query.value.name}&take=10`);
 }
+async function logout() {
+  await navigateTo("/");
+  await signOut({ callbackUrl: "/" });
+}
 </script>
 <template>
   <header class="border-b bg-white">
@@ -121,15 +125,24 @@ async function submitQuery() {
               <p class="text-lg">Transactions</p>
             </NuxtLink>
             <NuxtLink
+              v-if="(data as UserAuth).status == 'Admin' && status == 'authenticated'"
               to="/admin"
               class="flex gap-2 text p-2 hover:bg-slate-100"
             >
               <Icon name="eos-icons:admin" class="text-3xl" />
               <p class="text-lg">Admin</p>
             </NuxtLink>
+            <NuxtLink
+              to="/vendor"
+              class="flex gap-2 text p-2 hover:bg-slate-100"
+              v-if="(data as UserAuth).status == 'Vendor'"
+            >
+              <Icon name="ri:store-3-fill" class="text-3xl" />
+              <p class="text-lg">Your Vendor</p>
+            </NuxtLink>
             <button
               class="flex gap-2 text p-2 hover:bg-slate-100 w-full"
-              @click="signOut()"
+              @click="logout"
             >
               <Icon
                 name="material-symbols-light:logout-rounded"
@@ -202,13 +215,25 @@ async function submitQuery() {
           <Icon name="icon-park-solid:transaction-order" class="text-3xl" />
           <p class="text-lg">Transactions</p>
         </NuxtLink>
-        <NuxtLink to="/admin" class="flex gap-2 text p-2 hover:bg-slate-100">
+        <NuxtLink
+          to="/admin"
+          class="flex gap-2 text p-2 hover:bg-slate-100"
+          v-if="status == 'authenticated' && (data as UserAuth).status == 'Admin'"
+        >
           <Icon name="eos-icons:admin" class="text-3xl" />
           <p class="text-lg">Admin</p>
         </NuxtLink>
+        <NuxtLink
+          to="/vendor"
+          class="flex gap-2 text p-2 hover:bg-slate-100"
+          v-if="status == 'authenticated' && (data as UserAuth).status == 'Vendor'"
+        >
+          <Icon name="ri:store-3-fill" class="text-3xl" />
+          <p class="text-lg">Your Vendor</p>
+        </NuxtLink>
         <button
           class="flex gap-2 text p-2 hover:bg-slate-100 w-full"
-          @click="signOut()"
+          @click="logout"
         >
           <Icon name="material-symbols-light:logout-rounded" class="text-3xl" />
           <p class="text-lg font-medium">signout</p>

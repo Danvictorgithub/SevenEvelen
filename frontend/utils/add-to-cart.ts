@@ -1,15 +1,22 @@
-export default async function (e: Event, quantity: number | null = null, id: number | null = null) {
+export default async function (e: Event | null, quantity: number | null = null, id: number | null = null) {
     const API = useRuntimeConfig().public.API;
     const { status, token } = useAuth();
     if (status.value === 'unauthenticated') {
         return await navigateTo('/signin');
     }
-    const HTMLButton = e.target as HTMLButtonElement;
+    if (e) {
+        const HTMLButton = e.target as HTMLButtonElement;
+        id = parseInt(HTMLButton.id);
+    }
+    if (!id) {
+        alert("Provide Id or HTMLEvent with id");
+        return;
+    }
     const data = await $fetch<{ quantity: number }>(`${API}/user_cart`, {
         method: 'POST',
         headers: { Authorization: token.value as string },
         body: JSON.stringify({
-            productId: id ? id : parseInt(HTMLButton.id),
+            productId: id,
             quantity: (quantity) ? quantity : 1
         })
     }).catch(e => {
