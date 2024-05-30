@@ -3,7 +3,7 @@ import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Roles } from 'src/deocators/roles.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('brands')
 export class BrandsController {

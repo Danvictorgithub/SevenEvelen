@@ -28,7 +28,9 @@ export class CategoryService {
       productTypes: await Promise.all(children.map(child => this.fetchCategory(child))),
     };
   }
-
+  async findAllOriginal() {
+    return await this.prisma.productType.findMany();
+  }
   async findAll() {
     const categories = await this.prisma.productType.findMany({ where: { productTypeParentId: null } });
     return Promise.all(categories.map(category => this.fetchCategory(category)));

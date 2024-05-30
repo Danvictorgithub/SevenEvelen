@@ -16,7 +16,7 @@ const sevenElevenBrands = [
     { name: "Lucky Me!", image: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Lucky_Me_logo_%28since_2021%29.png" },
     { name: "Smirnoff", image: "https://1000logos.net/wp-content/uploads/2021/05/Smirnoff-logo.png" },
     { name: "Swiss Miss", image: "https://swissmissisamisshome.files.wordpress.com/2019/03/cropped-swissmisstransparent-11.png" },
-    { name: "Colage", image: "https://1000logos.net/wp-content/uploads/2016/12/Colgate-logo.png" },
+    { name: "Colgate", image: "https://1000logos.net/wp-content/uploads/2016/12/Colgate-logo.png" },
     { name: "Dove", image: "https://1000logos.net/wp-content/uploads/2021/04/Dove-logo.png" },
     { name: "Energizer", image: "https://1000logos.net/wp-content/uploads/2022/06/Energizer-logo.png" }
 ];

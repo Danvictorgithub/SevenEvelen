@@ -16,9 +16,10 @@ import { XenditModule } from './microservice/xendit/xendit.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { StatsModule } from './stats/stats.module';
 import { ReordersModule } from './reorders/reorders.module';
+import { CronjobsModule } from './cronjobs/cronjobs.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule, CartItemsModule, XenditModule, TransactionsModule, StatsModule, ReordersModule],
+  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule, CartItemsModule, XenditModule, TransactionsModule, StatsModule, ReordersModule, CronjobsModule],
   controllers: [AppController],
   providers: [AppService],
 })
