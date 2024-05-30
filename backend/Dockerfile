@@ -1,5 +1,5 @@
 # Base image
-FROM node:21
+FROM node
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -20,7 +20,7 @@ COPY .env ./
 RUN npm run build
 
 # Expose the port on which the app will run
-EXPOSE 3001
+EXPOSE 8080
 
 # Start the server using the production build
 CMD ["npm", "run", "start:prod"]
