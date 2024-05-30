@@ -5,6 +5,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { SupabaseService } from 'src/microservice/supabase/supabase.service';
 import { CreateVendorProductDto } from './dto/create-vendor-product.dto';
 import { UpdateVendorProductDto } from './dto/update-vendor-product.dto';
+import { VendorProductQuery } from './dto/vendor-product-query';
+import { DeleteVendorProductDto } from './dto/delete-vendor-product.dto';
 
 @Injectable()
 export class VendorService {
@@ -53,7 +55,7 @@ export class VendorService {
     const updatedVendor = await this.prisma.vendor.update({ where: { userId }, data: updateVendorDto })
     return updatedVendor;
   }
-  async findAllProducts(userId: number) {
+  async countAllProducts(userId: number, query: VendorProductQuery) {
     const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
     if (!user) {
       throw new NotFoundException("User not found");
@@ -61,7 +63,31 @@ export class VendorService {
     if (!user.vendor) {
       throw new BadRequestException("Vendor doesn't have a profile");
     }
-    const vendorProducts = await this.prisma.vendorProduct.findMany({ where: { vendorId: user.vendor.id } });
+    if (query) {
+      const { name, ...mainQuery } = query;
+      if (name) {
+        return await this.prisma.vendorProduct.count({ where: { vendorId: user.vendor.id, name: { contains: name, mode: 'insensitive' } } });
+      }
+      return await this.prisma.vendorProduct.count({ where: { vendorId: user.vendor.id } });
+    }
+    return await this.prisma.vendorProduct.count({ where: { vendorId: user.vendor.id } });
+  }
+  async findAllProducts(userId: number, query: VendorProductQuery) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    if (!user.vendor) {
+      throw new BadRequestException("Vendor doesn't have a profile");
+    }
+    if (query) {
+      const { name, ...mainQuery } = query;
+      if (name) {
+        return await this.prisma.vendorProduct.findMany({ where: { vendorId: user.vendor.id, name: { contains: name, mode: 'insensitive' } }, include: { brand: true, productType: true }, ...mainQuery });
+      }
+      return await this.prisma.vendorProduct.findMany({ where: { vendorId: user.vendor.id }, include: { brand: true, productType: true }, ...mainQuery });
+    }
+    const vendorProducts = await this.prisma.vendorProduct.findMany({ where: { vendorId: user.vendor.id }, include: { brand: true, productType: true } });
     return vendorProducts;
   }
   async findOneProduct(userId: number, id: number) {
@@ -133,6 +159,21 @@ export class VendorService {
     const updatedVendorProduct = await this.prisma.vendorProduct.update({ where: { id }, data: updateVendorProductDto });
     return updatedVendorProduct;
   }
+
+  async deleteSelectedProducts(userId: number, deleteVendorProductDto: DeleteVendorProductDto) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    if (!user.vendor) {
+      throw new BadRequestException("Vendor doesn't have a profile")
+    }
+    const vendorProducts = await this.prisma.vendorProduct.findMany({ where: { id: { in: deleteVendorProductDto.products }, vendorId: user.vendor.id } });
+    if (vendorProducts.length === 0) {
+      throw new NotFoundException("Vendor Products Not Found");
+    }
+    return await this.prisma.vendorProduct.deleteMany({ where: { id: { in: deleteVendorProductDto.products } } });
+  }
   async deleteVendorProduct(userId: number, id: number) {
     const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
     if (!user) {
@@ -146,5 +187,42 @@ export class VendorService {
       throw new NotFoundException("Vendor Product Not Found");
     }
     return await this.prisma.vendorProduct.delete({ where: { id: vendorProduct.id } });
+  }
+
+  async getStats(userId: number) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    if (!user.vendor) {
+      throw new BadRequestException("Vendor doesn't have a profile");
+    }
+    const noProducts = await this.prisma.vendorProduct.count({ where: { vendorId: user.vendor.id } });
+    // const noAssociatedStores = (await this.prisma.product.aggregate({ where: { product: { vendorId: user.vendor.id } }, _count: { storeId: true } }))._count;
+    const noAssociatedStores = (await this.prisma.product.groupBy({ by: 'storeId', where: { product: { vendorId: user.vendor.id } } })).length;
+    const reorderItems = await this.prisma.reorderItems.findMany({ where: { product: { product: { vendorId: user.vendor.id } } }, select: { quantity: true, product: { select: { product: { select: { originalPrice: true } } } } } });
+    const noItemsSold = reorderItems.reduce((acc, item) => acc + item.quantity, 0);
+    const totalProfit = reorderItems.reduce((acc, item) => acc + item.product.product.originalPrice, 0);
+    const allReorders = await this.prisma.reorder.findMany({
+      relationLoadStrategy: 'join', where: {
+        vendorId: user.vendor.id, status: 'Approved'
+      }, include: { reorderItems: { include: { product: { select: { product: { select: { originalPrice: true } } } } } } }
+    });
+    const weekProfit = allReorders.reduce((acc, item) => acc + item.reorderItems.reduce((sum, reorderItem) => sum + reorderItem.quantity * reorderItem.product.product.originalPrice, 0), 0)
+    const reordersThisWeek = allReorders.reduce((days, transaction) => {
+      const today = new Date();
+      const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
+      const weekEnd = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+      if (transaction.createdAt >= weekStart && transaction.createdAt <= weekEnd) {
+        if (!days[transaction.createdAt.getDay()]) {
+          days[transaction.createdAt.getDay()] = 0;
+        }
+        days[transaction.createdAt.getDay()] += transaction.reorderItems.reduce((acc, item) => acc + item.quantity * item.product.product.originalPrice, 0);
+      }
+      return days;
+    }, {})
+
+    return { noAssociatedStores, totalProfit, noProducts, noItemsSold, reordersThisWeek, weekProfit }
+
   }
 }

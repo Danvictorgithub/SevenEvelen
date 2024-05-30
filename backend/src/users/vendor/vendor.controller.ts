@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ParseFilePipe, UseInterceptors, UploadedFile, MaxFileSizeValidator, FileTypeValidator, ValidationPipe, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ParseFilePipe, UseInterceptors, UploadedFile, MaxFileSizeValidator, FileTypeValidator, ValidationPipe, Req, Query } from '@nestjs/common';
 import { VendorService } from './vendor.service';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { UpdateVendorDto } from './dto/update-vendor.dto';
@@ -7,6 +7,8 @@ import { Role, Roles } from 'src/enums/roles.enum';
 import { RequestUser } from '../cart/cart.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateVendorProductDto } from './dto/create-vendor-product.dto';
+import { VendorProductQuery } from './dto/vendor-product-query';
+import { DeleteVendorProductDto } from './dto/delete-vendor-product.dto';
 
 @UseGuards(JwtAuthGuard)
 @Roles(Role.Vendor)
@@ -32,10 +34,20 @@ export class VendorController {
   update(@UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), new FileTypeValidator({ fileType: "image/*" })] })) image: Express.Multer.File, @Request() req: RequestUser, @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipUndefinedProperties: true })) updateVendorDto: UpdateVendorDto) {
     return this.vendorService.update(req.user.id, updateVendorDto, image);
   }
-  @Get('products')
-  findAllProducts(@Request() req: RequestUser) {
-    return this.vendorService.findAllProducts(req.user.id)
+  @Get('stats')
+  getStats(@Request() req: RequestUser) {
+
+    return this.vendorService.getStats(req.user.id);
   }
+  @Get('products/count')
+  countallProducts(@Query(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipUndefinedProperties: true })) query: VendorProductQuery, @Request() req: RequestUser) {
+    return this.vendorService.countAllProducts(req.user.id, query);
+  }
+  @Get('products')
+  findAllProducts(@Query(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipUndefinedProperties: true })) query: VendorProductQuery, @Request() req: RequestUser) {
+    return this.vendorService.findAllProducts(req.user.id, query)
+  }
+  @Get('')
   @Get('products/:id')
   findOneProduct(@Request() req: RequestUser, @Param('id') id: string) {
     return this.vendorService.findOneProduct(req.user.id, +id);
@@ -47,8 +59,13 @@ export class VendorController {
   }
   @Patch('products/:id')
   @UseInterceptors(FileInterceptor('image'))
-  updateVendorProduct(@Param('id') id: string, @Request() req: RequestUser, @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createVendorProductDto: CreateVendorProductDto, @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), new FileTypeValidator({ fileType: "image/*" })] })) image: Express.Multer.File) {
+  updateVendorProduct(@Param('id') id: string, @Request() req: RequestUser, @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipUndefinedProperties: true })) createVendorProductDto: CreateVendorProductDto, @UploadedFile(new ParseFilePipe({ fileIsRequired: false, validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), new FileTypeValidator({ fileType: "image/*" })] })) image: Express.Multer.File) {
     return this.vendorService.updateVendorProduct(req.user.id, createVendorProductDto, image, +id);
+  }
+  @Delete('products/')
+  deleteSelectedProducts(@Request() req: RequestUser, @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) deleteVendorProductDto: DeleteVendorProductDto) {
+    return this.vendorService.deleteSelectedProducts(req.user.id, deleteVendorProductDto);
+
   }
   @Delete('products/:id')
   deleteVendorProduct(@Param('id') id: string, @Request() req: RequestUser) {
