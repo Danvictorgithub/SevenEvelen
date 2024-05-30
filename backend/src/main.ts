@@ -7,6 +7,6 @@ async function bootstrap() {
   app.enableCors();
   app.use(helmet());
   app.use(logger('dev'));
-  await app.listen(8080)
+  await app.listen((process.env.PORT) ? process.env.PORT : 8080)
 }
 bootstrap();
