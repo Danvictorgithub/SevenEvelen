@@ -1,5 +1,9 @@
 <script setup lang="ts">
-await authorize("Vendor");
+const check = async () => {
+  await authorize("Vendor");
+};
+check();
+
 const { data, token } = useAuth();
 const API = useRuntimeConfig().public.API;
 const { data: vendor, error } = await useFetch<VendorType>(
@@ -13,8 +17,8 @@ const userData = data as unknown as UserAuth;
 </script>
 <template>
   <aside
-    class="flex flex-col w-64 max-w-64 h-screen px-4 py-8 bg-white border-r rtl:border-r-0 rtl:border-l flex-1 fixed lg:static duration-200 top-0"
-    :class="{ '-translate-x-full': !showSideBar }"
+    class="flex flex-col w-64 max-w-64 h-screen px-4 py-8 bg-white border-r rtl:border-r-0 rtl:border-l flex-1 fixed lg:static duration-200 top-0 z-[10]"
+    :class="{ '-translate-x-full lg:-translate-x-0': !showSideBar }"
   >
     <h2 class="text-center font-bold text-xl text-slate-700">
       Vendor Dashboard
@@ -62,9 +66,9 @@ const userData = data as unknown as UserAuth;
     </div>
     <div class="flex flex-col justify-between flex-1 mt-6">
       <nav v-if="!error">
-        <a
-          class="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-lg"
-          href="#"
+        <NuxtLink
+          class="flex items-center px-4 py-2 text-gray-700 rounded-lg"
+          to="/vendor"
         >
           <svg
             class="w-5 h-5"
@@ -82,38 +86,20 @@ const userData = data as unknown as UserAuth;
           </svg>
 
           <span class="mx-4 font-medium">Dashboard</span>
-        </a>
+        </NuxtLink>
 
-        <a
+        <NuxtLink
+          to="/vendor/products"
           class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-lg hover:bg-gray-100 :bg-gray-800 :text-gray-200 hover:text-gray-700"
           href="#"
         >
-          <svg
-            class="w-5 h-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <Icon name="fluent-mdl2:product" class="text-2xl" />
 
-          <span class="mx-4 font-medium">Accounts</span>
-        </a>
+          <span class="mx-4 font-medium">Products</span>
+        </NuxtLink>
 
-        <a
+        <NuxtLink
+          to="/vendors/reorders"
           class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-lg hover:bg-gray-100 :bg-gray-800 :text-gray-200 hover:text-gray-700"
           href="#"
         >
@@ -132,10 +118,10 @@ const userData = data as unknown as UserAuth;
             />
           </svg>
 
-          <span class="mx-4 font-medium">Tickets</span>
-        </a>
+          <span class="mx-4 font-medium">Reorders</span>
+        </NuxtLink>
 
-        <a
+        <!-- <a
           class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-lg hover:bg-gray-100 :bg-gray-800 :text-gray-200 hover:text-gray-700"
           href="#"
         >
@@ -162,8 +148,13 @@ const userData = data as unknown as UserAuth;
           </svg>
 
           <span class="mx-4 font-medium">Settings</span>
-        </a>
+        </a> -->
       </nav>
     </div>
   </aside>
 </template>
+<style scoped>
+.router-link-exact-active {
+  @apply bg-gray-100;
+}
+</style>

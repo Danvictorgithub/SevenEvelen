@@ -12,7 +12,7 @@ interface productQuery {
   skip: number;
   lte: number | null;
   gte: number | null;
-  orderBy: "asc" | "desc" | undefined;
+  orderBy: "asc" | "desc" | undefined | "undefined";
   productTypeId: number | null;
 }
 const query = useRoute().query;
@@ -111,6 +111,9 @@ async function updatePriceQuery() {
 watch(activeQuery, () => {
   skip.value = query.take ? parseInt(query.take as string) : 10;
   endFetch.value = false;
+});
+watchEffect(() => {
+  console.log((activeQuery.value as productQuery).orderBy);
 });
 
 useInfiniteScroll(el, await getMoreProducts, { distance: 200 });
@@ -224,14 +227,29 @@ useInfiniteScroll(el, await getMoreProducts, { distance: 200 });
               class="flex justify-between items-center gap-4 w-full text-xs sm:text-base"
             >
               <button
-                class="basis-0 flex-1 font-bold rounded-xl p-4 text-white bg-green-500"
+                @click="(activeQuery as productQuery).orderBy = 'undefined'"
+                :class="{'bg-green-500 text-white border-transparent':(activeQuery as productQuery).orderBy == undefined}"
+                class="basis-0 flex-1 font-bold rounded-xl p-4 text-black border"
               >
                 Best Match
               </button>
               <button
+                @click="
+                  (activeQuery as productQuery).orderBy == 'undefined'
+                    ? ((activeQuery as productQuery).orderBy = 'asc')
+                    : (activeQuery as productQuery).orderBy == 'asc'
+                    ? ((activeQuery as productQuery).orderBy = 'desc')
+                    : ((activeQuery as productQuery).orderBy = 'asc')
+                "
+                :class="{'bg-green-500 border-transparent text-white':(activeQuery as productQuery).orderBy == 'asc' || (activeQuery as productQuery).orderBy == 'desc'}"
                 class="basis-0 flex-1 font-bold rounded-xl p-4 border flex gap-4 items-center justify-center"
               >
-                Price <Icon name="teenyicons:up-solid" />
+                Price
+                <Icon
+                  name="teenyicons:up-solid"
+                  v-if="(activeQuery as productQuery).orderBy == 'desc'"
+                />
+                <Icon name="teenyicons:down-solid" v-else />
               </button>
               <button
                 class="basis=0 flex-1 font-bold rounded-xl p-4 border flex gap-4 items-center justify-center"

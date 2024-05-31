@@ -6,22 +6,6 @@ declare interface ProductType {
         name: string;
         image: string;
     };
-    product: {
-        name: string;
-        image: string;
-        upcCode: string;
-        size: string;
-        originalPrice: number;
-        productType: { name: string };
-        brand: {
-            name: string;
-            image: string;
-        };
-        vendor: {
-            name: string;
-            image: string;
-        };
-
-    };
+    product: VendorProductType
     userCart: number;
 }

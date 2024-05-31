@@ -7,7 +7,7 @@ function categoryLink(id: number) {
 }
 </script>
 <template>
-  <div class="absolute bg-white z-10 border w-full top-14 category hidden">
+  <div class="absolute bg-white border w-full top-14 category hidden z-[99999]">
     <div v-for="category in productTypes" class="border relative self">
       <NuxtLink :to="categoryLink(category.id)" class="h-full w-full">
         <p class="font-bold p-4 hover:bg-green-400 hover:text-white">
