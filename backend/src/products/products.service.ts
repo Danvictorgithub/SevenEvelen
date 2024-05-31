@@ -109,7 +109,7 @@ export class ProductsService {
     return product;
   }
   async newArrivals() {
-    return this.prisma.product.findMany({ take: 5, orderBy: { updatedAt: "desc" }, include: { product: { include: { productType: true, brand: true, vendor: true } } } })
+    return this.prisma.product.findMany({ relationLoadStrategy: 'join', take: 5, orderBy: { updatedAt: "desc" }, include: { product: { include: { productType: true, brand: true, vendor: true } } } })
   }
   async trendingProducts() {
     const trendingProductSell = await this.prisma.transactionItem.groupBy({
