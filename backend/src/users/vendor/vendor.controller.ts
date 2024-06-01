@@ -9,6 +9,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateVendorProductDto } from './dto/create-vendor-product.dto';
 import { VendorProductQuery } from './dto/vendor-product-query';
 import { DeleteVendorProductDto } from './dto/delete-vendor-product.dto';
+import { ReorderQuery } from './dto/reorder-query.dto';
+import { UpdateReorderDto } from './dto/update-reorder.dto';
 
 @UseGuards(JwtAuthGuard)
 @Roles(Role.Vendor)
@@ -70,5 +72,18 @@ export class VendorController {
   @Delete('products/:id')
   deleteVendorProduct(@Param('id') id: string, @Request() req: RequestUser) {
     return this.vendorService.deleteVendorProduct(req.user.id, +id);
+  }
+
+  @Get('reorders')
+  findAllReorders(@Request() req: RequestUser, @Query(new ValidationPipe({ whitelist: true, skipUndefinedProperties: true, forbidNonWhitelisted: true })) query: ReorderQuery) {
+    return this.vendorService.findAllReorders(req.user.id, query);
+  }
+  @Get('reorders/count')
+  countAllReorders(@Request() req: RequestUser, @Query(new ValidationPipe({ whitelist: true, skipUndefinedProperties: true, forbidNonWhitelisted: true })) query: ReorderQuery) {
+    return this.vendorService.countAllReorders(req.user.id, query);
+  }
+  @Patch('reorders/:id')
+  updateReorder(@Param('id') id: string, @Request() req: RequestUser, @Body(new ValidationPipe({ whitelist: true, skipUndefinedProperties: true, forbidNonWhitelisted: true })) updateReorderDto: UpdateReorderDto) {
+    return this.vendorService.updateReorder(req.user.id, updateReorderDto, id);
   }
 }

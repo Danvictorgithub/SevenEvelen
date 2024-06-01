@@ -31,6 +31,9 @@ export class XenditService {
         if (!product) {
             throw new NotFoundException("Product not Found");
         }
+        if (product.stock <= 0) {
+            throw new NotFoundException("Product out of stock");
+        }
         if (product.stock < buyNowDto.quantity) {
             throw new NotFoundException("quantity out of range of stock");
         }

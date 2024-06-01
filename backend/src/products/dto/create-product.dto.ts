@@ -1,4 +1,4 @@
-import { IsInt, IsNumber } from "class-validator";
+import { IsInt, IsNumber, IsOptional } from "class-validator";
 
 export class CreateProductDto {
     @IsInt()
@@ -6,6 +6,7 @@ export class CreateProductDto {
     @IsNumber()
     markupRate: number;
     @IsInt()
+    @IsOptional()
     stock: number;
     @IsInt()
     storeId: number;

@@ -7,6 +7,8 @@ import { CreateVendorProductDto } from './dto/create-vendor-product.dto';
 import { UpdateVendorProductDto } from './dto/update-vendor-product.dto';
 import { VendorProductQuery } from './dto/vendor-product-query';
 import { DeleteVendorProductDto } from './dto/delete-vendor-product.dto';
+import { ReorderQuery } from './dto/reorder-query.dto';
+import { UpdateReorderDto } from './dto/update-reorder.dto';
 
 @Injectable()
 export class VendorService {
@@ -200,15 +202,15 @@ export class VendorService {
     const noProducts = await this.prisma.vendorProduct.count({ where: { vendorId: user.vendor.id } });
     // const noAssociatedStores = (await this.prisma.product.aggregate({ where: { product: { vendorId: user.vendor.id } }, _count: { storeId: true } }))._count;
     const noAssociatedStores = (await this.prisma.product.groupBy({ by: 'storeId', where: { product: { vendorId: user.vendor.id } } })).length;
-    const reorderItems = await this.prisma.reorderItems.findMany({ where: { product: { product: { vendorId: user.vendor.id } } }, select: { quantity: true, product: { select: { product: { select: { originalPrice: true } } } } } });
+    const reorderItems = await this.prisma.reorderItems.findMany({ where: { reorder: { status: 'Delivered' }, product: { product: { vendorId: user.vendor.id } } }, select: { quantity: true, product: { select: { product: { select: { originalPrice: true } } } } } });
     const noItemsSold = reorderItems.reduce((acc, item) => acc + item.quantity, 0);
-    const totalProfit = reorderItems.reduce((acc, item) => acc + item.product.product.originalPrice, 0);
+    const totalProfit = reorderItems.reduce((acc, item) => acc + item.product.product.originalPrice * item.quantity, 0);
     const allReorders = await this.prisma.reorder.findMany({
       relationLoadStrategy: 'join', where: {
-        vendorId: user.vendor.id, status: 'Approved'
+        vendorId: user.vendor.id,
       }, include: { reorderItems: { include: { product: { select: { product: { select: { originalPrice: true } } } } } } }
     });
-    const weekProfit = allReorders.reduce((acc, item) => acc + item.reorderItems.reduce((sum, reorderItem) => sum + reorderItem.quantity * reorderItem.product.product.originalPrice, 0), 0)
+    const weekProfit = allReorders.reduce((acc, item) => acc + ((item.status == 'Delivered') ? item.reorderItems.reduce((sum, reorderItem) => sum + reorderItem.quantity * reorderItem.product.product.originalPrice, 0) : 0), 0)
     const reordersThisWeek = allReorders.reduce((days, transaction) => {
       const today = new Date();
       const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
@@ -223,6 +225,74 @@ export class VendorService {
     }, {})
 
     return { noAssociatedStores, totalProfit, noProducts, noItemsSold, reordersThisWeek, weekProfit }
+  }
 
+  async findAllReorders(userId: number, query: ReorderQuery) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    if (!user.vendor) {
+      throw new BadRequestException("Vendor doesn't have a profile");
+    }
+    if (query) {
+      const { status, orderBy, ...mainQuery } = query;
+      if (orderBy) {
+        mainQuery['orderBy'] = { status: orderBy }
+      }
+      if (status) {
+        return await this.prisma.reorder.findMany({ relationLoadStrategy: 'join', where: { vendorId: user.vendor.id, status: query.status }, ...mainQuery, include: { reorderItems: { include: { product: { include: { product: true } } } } } });
+      }
+      return await this.prisma.reorder.findMany({ relationLoadStrategy: 'join', where: { vendorId: user.vendor.id, status: query.status }, ...mainQuery, include: { reorderItems: { include: { product: { include: { product: true } } } } } });
+    }
+    return await this.prisma.reorder.findMany({ relationLoadStrategy: 'join', where: { vendorId: user.vendor.id }, orderBy: { status: 'asc' }, include: { reorderItems: { include: { product: { include: { product: true } } } } } });
+  }
+  async countAllReorders(userId: number, query: ReorderQuery) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    if (!user.vendor) {
+      throw new BadRequestException("Vendor doesn't have a profile");
+    }
+    if (query) {
+      const { status, ...mainQuery } = query;
+      if (status) {
+        return await this.prisma.reorder.count({ where: { vendorId: user.vendor.id, status: query.status } });
+      }
+    }
+    return await this.prisma.reorder.count({ where: { vendorId: user.vendor.id } });
+  }
+  async updateReorder(userId: number, updateReorderDto: UpdateReorderDto, id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { vendor: true } });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    if (!user.vendor) {
+      throw new BadRequestException("Vendor doesn't have a profile");
+    }
+    const reorder = await this.prisma.reorder.findUnique({ where: { vendorId: user.vendor.id, id } });
+    if (!reorder) {
+      throw new NotFoundException("Reorder not found");
+    }
+    if (reorder.status !== 'Pending') {
+      throw new BadRequestException('Reorder status is not pending')
+    }
+    if (updateReorderDto.status == 'Rejected') {
+      updateReorderDto.deliveryDate = null;
+    }
+    else if (updateReorderDto.status == 'Delivered') {
+      throw new UnauthorizedException()
+    }
+    else if (updateReorderDto.status == 'Approved') {
+      if (updateReorderDto.deliveryDate === null) {
+        throw new BadRequestException('Delivery date is required')
+      }
+      else if (new Date(updateReorderDto.deliveryDate) < new Date(reorder.createdAt) && new Date(updateReorderDto.deliveryDate) <= new Date()) {
+        throw new BadRequestException("Delivery date cannot be earlier than reorder date or today's date")
+      }
+    }
+    const updatedReorder = await this.prisma.reorder.update({ where: { id }, data: updateReorderDto });
+    return updatedReorder;
   }
 }
