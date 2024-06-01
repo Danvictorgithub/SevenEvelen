@@ -152,7 +152,7 @@ async function rejectReorder() {
     </UModal>
     <VendorSideBar />
     <section class="p-4 flex-1 min-h-screen container mx-auto my-12">
-      <section class="container px-4 mx-auto">
+      <section class="container mx-auto">
         <div class="flex items-center justify-between flex-col lg:flex-row">
           <div class="flex items-center gap-x-3">
             <h2 class="text-lg font-medium text-gray-800">Reorder reorders</h2>
