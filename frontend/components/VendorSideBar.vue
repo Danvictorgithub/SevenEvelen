@@ -99,7 +99,7 @@ const userData = data as unknown as UserAuth;
         </NuxtLink>
 
         <NuxtLink
-          to="/vendors/reorders"
+          to="/vendor/reorders"
           class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-lg hover:bg-gray-100 :bg-gray-800 :text-gray-200 hover:text-gray-700"
           href="#"
         >

@@ -1,5 +1,6 @@
 export default async function (e: Event | null, quantity: number | null = null, id: number | null = null) {
     const API = useRuntimeConfig().public.API;
+    const err = errorStore();
     const { status, token } = useAuth();
     if (status.value === 'unauthenticated') {
         return await navigateTo('/signin');
@@ -20,11 +21,12 @@ export default async function (e: Event | null, quantity: number | null = null, 
             quantity: (quantity) ? quantity : 1
         })
     }).catch(e => {
+        err.value.showError = true;
         if (e.data) {
-            alert(e.data.message);
+            err.value.message = e.data.message;
         }
         else if (e) {
-            alert(e);
+            err.value.message = "Server is not responding"
         }
     })
     if (data) {

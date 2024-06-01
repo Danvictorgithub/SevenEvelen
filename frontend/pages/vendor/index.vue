@@ -61,7 +61,11 @@ const chartOptions = ref({
             </div>
             <div class="text-center">
               <p class="text-5xl font-bold text-gray-700">
-                {{ stats?.totalProfit }}
+                ₱{{
+                  stats?.totalProfit! < 1000
+                    ? stats?.totalProfit.toFixed(2)
+                    : `${(stats?.totalProfit! / 1000).toFixed(2)}K`
+                }}
               </p>
               <p class="font-medium text-gray-500">Total Profit</p>
             </div>
@@ -134,7 +138,11 @@ const chartOptions = ref({
             </div>
             <div class="text-center">
               <p class="text-5xl font-bold text-gray-700">
-                {{ stats?.totalProfit }}
+                ₱{{
+                  stats?.weekProfit! < 1000
+                    ? stats?.weekProfit.toFixed(2)
+                    : `${(stats?.weekProfit! / 1000).toFixed(2)}K`
+                }}
               </p>
               <p class="font-medium text-gray-500">Total Profit</p>
             </div>

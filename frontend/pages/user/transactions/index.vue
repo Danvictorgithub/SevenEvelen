@@ -152,7 +152,7 @@ const { data: transactions } = await useFetch<{
                     </td>
                     <td class="px-4 py-4 text-sm whitespace-nowrap">
                       <NuxtTime
-                        :datetime="Date.now()"
+                        :datetime="transaction.createdAt"
                         month="long"
                         day="numeric"
                         year="numeric"

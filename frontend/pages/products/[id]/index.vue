@@ -32,7 +32,7 @@ async function buynow() {
     const error = errorStore();
     error.value.showError = true;
     if (e.data) {
-      error.value.message = e.data;
+      error.value.message = e.data.message;
     } else if (e) {
       error.value.message = e;
     }
@@ -120,7 +120,7 @@ const loading = loadingStore();
           <div class="flex items-center mt-6">
             <button
               @click="setLoading(buynow)"
-              class="flex items-center gap-2 px-8 py-2 bg-green-500 text-white text-sm font-medium rounded hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500 w-full md:w-auto"
+              class="flex items-center gap-2 px-8 py-2 bg-green-500 text-white text-sm font-medium rounded hover:bg-green-600 focus:outline-none focus:bg-green-700 w-full md:w-auto"
             >
               <Icon name="eos-icons:loading" v-if="loading.loading" />
               Buy Now
