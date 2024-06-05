@@ -36,7 +36,7 @@ await authorize("Admin");
           to="/admin/stores"
           class="px-4 flex gap-4 items-center p-4 rounded-xl"
         >
-          <Icon name="material-symbols:dashboard" class="text-2xl" />
+          <Icon name="ic:baseline-store" class="text-2xl" />
           <p class="font-medium text-lg">Stores</p>
         </NuxtLink>
       </div>
