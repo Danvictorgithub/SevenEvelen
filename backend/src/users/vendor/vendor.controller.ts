@@ -11,8 +11,9 @@ import { VendorProductQuery } from './dto/vendor-product-query';
 import { DeleteVendorProductDto } from './dto/delete-vendor-product.dto';
 import { ReorderQuery } from './dto/reorder-query.dto';
 import { UpdateReorderDto } from './dto/update-reorder.dto';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.Vendor)
 @Controller('user_vendor')
 export class VendorController {

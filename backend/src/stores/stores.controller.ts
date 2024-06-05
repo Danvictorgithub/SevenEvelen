@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UseInterceptors, UploadedFile, FileValidator, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UseInterceptors, UploadedFile, FileValidator, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator, Query } from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Role, Roles } from 'src/enums/roles.enum';
+import { StoreQuery } from './dto/store-query.dto';
 
 @Controller('stores')
+@Roles(Role.Admin)
 export class StoresController {
   constructor(private readonly storesService: StoresService) { }
 
@@ -20,8 +23,8 @@ export class StoresController {
   }
 
   @Get()
-  findAll() {
-    return this.storesService.findAll();
+  findAll(@Query(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) query: StoreQuery) {
+    return this.storesService.findAll(query);
   }
   @Get('locations')
   findLocations() {

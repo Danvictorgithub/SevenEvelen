@@ -3,6 +3,7 @@ import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SupabaseService } from 'src/microservice/supabase/supabase.service';
+import { StoreQuery } from './dto/store-query.dto';
 
 @Injectable()
 export class StoresService {
@@ -14,7 +15,12 @@ export class StoresService {
     return await this.prisma.store.create({ data: createStoreDto });
   }
 
-  async findAll() {
+  async findAll(query: StoreQuery) {
+    if (query) {
+      const { name, ...mainQuery } = query;
+      mainQuery["where"] = { name: { contains: name, mode: "insensitive" } }
+      return await this.prisma.store.findMany(mainQuery);
+    }
     return await this.prisma.store.findMany();
   }
   async findLocations() {
