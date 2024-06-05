@@ -19,9 +19,16 @@ export class StoresService {
     if (query) {
       const { name, ...mainQuery } = query;
       mainQuery["where"] = { name: { contains: name, mode: "insensitive" } }
-      return await this.prisma.store.findMany(mainQuery);
+      return await this.prisma.store.findMany({ include: { _count: { select: { products: true } } }, ...mainQuery });
     }
-    return await this.prisma.store.findMany();
+    return await this.prisma.store.findMany({ include: { _count: { select: { products: true } } } });
+  }
+  async countAll(query: StoreQuery) {
+    if (query) {
+      const { name, ...mainQuery } = query;
+      return await this.prisma.store.count({ where: { name: { contains: name, mode: "insensitive" } } });
+    }
+    return await this.prisma.store.count();
   }
   async findLocations() {
     return await this.prisma.store.findMany({ select: { lat: true, long: true } });

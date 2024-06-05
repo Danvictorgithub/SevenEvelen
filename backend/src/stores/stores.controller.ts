@@ -1,12 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UseInterceptors, UploadedFile, FileValidator, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UseInterceptors, UploadedFile, FileValidator, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator, Query, UseGuards } from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Role, Roles } from 'src/enums/roles.enum';
 import { StoreQuery } from './dto/store-query.dto';
+import { JwtAuthGuard } from 'src/authentication/auth/jwt.auth.guard';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 
 @Controller('stores')
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.Admin)
 export class StoresController {
   constructor(private readonly storesService: StoresService) { }
@@ -23,8 +26,12 @@ export class StoresController {
   }
 
   @Get()
-  findAll(@Query(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) query: StoreQuery) {
+  findAll(@Query(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipUndefinedProperties: true })) query: StoreQuery) {
     return this.storesService.findAll(query);
+  }
+  @Get('count')
+  countAll(@Query(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipUndefinedProperties: true })) query: StoreQuery) {
+    return this.storesService.countAll(query);
   }
   @Get('locations')
   findLocations() {
