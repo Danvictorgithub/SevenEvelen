@@ -105,7 +105,8 @@ useInfiniteScroll(el, await getMoreStore, { distance: 500 });
           <div
             class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3 items-center justify-center"
           >
-            <div
+            <NuxtLink
+              :to="`/admin/stores/${store.id}`"
               v-for="store in stores"
               :key="store.id"
               class="w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg mx-auto"
@@ -157,7 +158,7 @@ useInfiniteScroll(el, await getMoreStore, { distance: 500 });
                   </h1>
                 </div>
               </div>
-            </div>
+            </NuxtLink>
           </div>
         </div>
       </section>

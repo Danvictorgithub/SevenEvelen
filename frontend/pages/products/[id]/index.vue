@@ -2,7 +2,12 @@
 const API = useRuntimeConfig().public.API;
 const { id } = useRoute().params;
 const { status, token } = useAuth();
-const { data: product } = await useFetch<ProductType>(`${API}/products/${id}`);
+const { data: product, error } = await useFetch<ProductType>(
+  `${API}/products/${id}`
+);
+if (error.value) {
+  throw createError({ statusCode: 404, message: "Product not found" });
+}
 const quantity = ref(1);
 function increment() {
   if (quantity.value + 1 <= product.value!.stock) {

@@ -323,7 +323,11 @@ useInfiniteScroll(el, await getMoreProducts, { distance: 500 });
             v-if="showGrid"
             class="w-full grid grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 my-12 p-4"
           >
-            <Product v-for="product in new Set(products)" :product="product" />
+            <Product
+              v-for="product in new Set(products)"
+              :product="product"
+              :show-cart="true"
+            />
           </div>
           <div v-else class="w-full">
             <ProductVertical

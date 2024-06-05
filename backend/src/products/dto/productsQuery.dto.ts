@@ -31,4 +31,7 @@ export class ProductsQuery {
     @IsInt()
     @Type(() => Number)
     productTypeId: number
+    @IsInt()
+    @Type(() => Number)
+    storeId: number
 }

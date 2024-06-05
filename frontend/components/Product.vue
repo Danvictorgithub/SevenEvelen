@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ product: ProductType }>();
+defineProps<{ product: ProductType; showCart: boolean }>();
 </script>
 <template>
   <div class="max-w-2xl" :key="product.id">
@@ -28,6 +28,7 @@ defineProps<{ product: ProductType }>();
             ₱{{ retailPrice(product) }}
           </p>
           <button
+            v-if="showCart"
             @click="addToCart"
             :id="product?.id.toString()"
             class="w-full lg:w-auto flex justify-center items-center gap-2 duration-200 transition-all text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2.5 py-1.5 lg:px-5 lg:py-2.5 text-center :bg-green-500 :ring-green-600"

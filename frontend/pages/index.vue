@@ -255,7 +255,7 @@ useInfiniteScroll(el, await getMoreProducts, { distance: 500 });
         <div
           class="grid grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 my-12 p-4 lg:p-0"
         >
-          <Product :product="item" v-for="item in products" />
+          <Product :product="item" v-for="item in products" :show-cart="true" />
         </div>
         <p
           class="font-medium text-xl w-full text-center text-gray-500"

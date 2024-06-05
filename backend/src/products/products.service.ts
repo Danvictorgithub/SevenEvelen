@@ -27,9 +27,12 @@ export class ProductsService {
   async countAll(query: ProductsQuery) {
     if (query) {
 
-      const { skip, gte, lte, take, name, orderBy, productTypeId, ...mainQuery } = query;
+      const { skip, gte, lte, take, name, orderBy, productTypeId, storeId, ...mainQuery } = query;
       if (name) {
         mainQuery['where'] = { product: { name: { contains: name, mode: 'insensitive' } } };
+      }
+      if (storeId) {
+        mainQuery['where'] = { storeId };
       }
       if (productTypeId) {
         mainQuery['where'] = { product: { productTypeId } };
@@ -60,7 +63,7 @@ export class ProductsService {
   }
   async findAll(query: ProductsQuery) {
     if (Object.keys(query).length > 0) {
-      const { lte, gte, orderBy, name, productTypeId, ...mainQuery } = query;
+      const { storeId, lte, gte, orderBy, name, productTypeId, ...mainQuery } = query;
       if (orderBy) {
         mainQuery['orderBy'] = [{
           product: { originalPrice: orderBy },
@@ -68,6 +71,9 @@ export class ProductsService {
       }
       if (name) {
         mainQuery['where'] = { product: { name: { contains: name, mode: 'insensitive' } } };
+      }
+      if (storeId) {
+        mainQuery['where'] = { storeId };
       }
       if (productTypeId) {
         mainQuery['where'] = { product: { productTypeId } };
