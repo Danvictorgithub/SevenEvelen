@@ -28,6 +28,7 @@ const { data: stats } = await useFetch<{
   noUsers: number;
   transactionsByMonth: TransactionsByMonth;
   transactionsThisWeek: TransactionsThisWeek;
+  inventory: number;
 }>(`${API}/stats`, {
   headers: {
     Authorization: token.value as string,
@@ -103,7 +104,7 @@ const chartOptions2 = ref({
   <main class="min-h-svh flex relative">
     <AdminSideBar />
     <section class="bg-slate-100 w-full p-4">
-      <div class="grid grid-cols-1 lg:grid-cols-4 my-6 gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-5 my-6 gap-4">
         <div class="bg-white p-4 rounded-xl">
           <div class="flex">
             <div class="bg-slate-50 p-4 rounded-full aspect-square">
@@ -136,6 +137,17 @@ const chartOptions2 = ref({
           </div>
           <p class="text-2xl font-bold">{{ stats?.noProducts }}</p>
           <p class="font-medium text-gray-500">No. Products</p>
+        </div>
+        <div class="bg-white p-4 rounded-xl">
+          <div class="flex">
+            <div
+              class="bg-slate-50 p-4 rounded-full aspect-square text-green-500"
+            >
+              <Icon name="fluent-mdl2:product" class="text-3xl" />
+            </div>
+          </div>
+          <p class="text-2xl font-bold">{{ stats?.inventory }}</p>
+          <p class="font-medium text-gray-500">Total Inventory</p>
         </div>
         <div class="bg-white p-4 rounded-xl">
           <div class="flex">

@@ -32,6 +32,7 @@ export class StatsService {
 
             return days;
         }, {})
-        return { totalEarning, noStores, noProducts, noUsers, transactionsByMonth, transactionsThisWeek }
+        const inventory = (await this.prisma.product.aggregate({ _sum: { stock: true } }))._sum.stock;
+        return { totalEarning, noStores, noProducts, noUsers, transactionsByMonth, transactionsThisWeek, inventory }
     }
 }
