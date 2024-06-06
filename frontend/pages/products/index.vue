@@ -116,7 +116,7 @@ watchEffect(() => {
   console.log((activeQuery.value as productQuery).orderBy);
 });
 
-useInfiniteScroll(el, await getMoreProducts, { distance: 1000 });
+useInfiniteScroll(el, await getMoreProducts, { distance: 2000 });
 </script>
 <template>
   <div class="h-screen overflow-scroll" ref="el">
