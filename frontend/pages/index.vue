@@ -69,7 +69,7 @@ async function getMoreProducts() {
     }
   }
 }
-useInfiniteScroll(el, await getMoreProducts, { distance: 500 });
+useInfiniteScroll(el, await getMoreProducts, { distance: 1000 });
 </script>
 <template>
   <div class="h-screen overflow-scroll" ref="el">

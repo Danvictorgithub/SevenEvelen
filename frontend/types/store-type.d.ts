@@ -10,4 +10,5 @@ declare interface StoreType {
     updatedAt: Date;
     products: ProductType[]
     _count: { products: number }
+    noProductSold: number;
 }

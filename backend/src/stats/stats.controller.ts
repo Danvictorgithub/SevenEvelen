@@ -11,6 +11,10 @@ import { RolesGuard } from 'src/guards/roles/roles.guard';
 export class StatsController {
   constructor(private readonly statsService: StatsService) {
   }
+  @Get('store')
+  findAllStoreStats() {
+    return this.statsService.findAllStoreStats();
+  }
   @Get()
   findAll() {
     return this.statsService.findAll();
