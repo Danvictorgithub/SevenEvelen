@@ -79,7 +79,7 @@ export class ProductsService {
         mainQuery['where'] = { product: { productTypeId } };
       }
       const queryResult = await this.prisma.product.findMany({
-        ...mainQuery, include: { store: { select: { name: true } }, product: { include: { productType: true, brand: true, vendor: true }, } }
+        ...mainQuery, include: { store: { select: { name: true, id: true } }, product: { include: { productType: true, brand: true, vendor: true }, } }
       });
       if (lte || gte) {
         const queryResultWithPrice = queryResult.map((product) => ({

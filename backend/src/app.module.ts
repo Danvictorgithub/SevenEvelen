@@ -19,7 +19,23 @@ import { ReordersModule } from './reorders/reorders.module';
 import { CronjobsModule } from './cronjobs/cronjobs.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, SupabaseModule, AuthModule, CategoryModule, BrandsModule, StoresModule, VendorsModule, VendorProductsModule, ProductsModule, CartItemsModule, XenditModule, TransactionsModule, StatsModule, ReordersModule, CronjobsModule],
+  imports: [
+    UsersModule,
+    PrismaModule,
+    SupabaseModule,
+    AuthModule,
+    CategoryModule,
+    BrandsModule,
+    StoresModule,
+    VendorsModule,
+    VendorProductsModule,
+    ProductsModule,
+    CartItemsModule,
+    XenditModule,
+    TransactionsModule,
+    StatsModule,
+    ReordersModule,
+    CronjobsModule],
   controllers: [AppController],
   providers: [AppService],
 })
