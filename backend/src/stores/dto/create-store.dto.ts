@@ -1,4 +1,4 @@
-import { IsOptional, IsString, Length } from "class-validator";
+import { IsNumberString, IsOptional, IsString, Length } from "class-validator";
 
 export class CreateStoreDto {
     @IsOptional()
@@ -7,9 +7,16 @@ export class CreateStoreDto {
     image: string
     @Length(1, 32)
     name: string
-    @Length(1, 32)
+    @Length(1, 128)
     address: string
     @Length(1, 32)
     opening_hours: string
-
+    @IsOptional()
+    @IsString()
+    @IsNumberString()
+    long: string;
+    @IsOptional()
+    @IsString()
+    @IsNumberString()
+    lat: string;
 }

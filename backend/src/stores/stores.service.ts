@@ -12,6 +12,9 @@ export class StoresService {
     if (image) {
       createStoreDto.image = await this.supabase.uploadImage(image);
     }
+    else {
+      createStoreDto.image = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/7-eleven_logo.svg/2110px-7-eleven_logo.svg.png";
+    }
     return await this.prisma.store.create({ data: createStoreDto });
   }
 
