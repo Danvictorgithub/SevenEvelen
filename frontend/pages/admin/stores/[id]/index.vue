@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const loading = loadingStore();
+const showDeleteConfirmationModal = ref(false);
 const { id } = useRoute().params;
 const take = ref(10);
 const skip = ref(10);
@@ -56,6 +58,29 @@ async function getMoreProducts() {
       endFetch.value = true;
     }
   }
+}
+
+async function deleteStore() {
+  const data = await $fetch(`${API}/stores/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: token.value as string,
+    },
+  })
+    .then((res) => {
+      if (res) {
+        navigateTo("/admin/stores");
+      }
+    })
+    .catch((err) => {
+      const e = errorStore();
+      e.value.showError = true;
+      if (err.data) {
+        e.value.message = err.data.message;
+      } else {
+        e.value.message = "The server is not responding";
+      }
+    });
 }
 const el = ref(null);
 useInfiniteScroll(el, await getMoreProducts, { distance: 3000 });
@@ -138,6 +163,36 @@ useInfiniteScroll(el, await getMoreProducts, { distance: 3000 });
                   </p>
                 </div>
               </button>
+              <div @click="showDeleteConfirmationModal = true" class="mt-4">
+                <button
+                  class="flex items-center gap-2 py-2 px-3 border border-transparent bg-red-500 hover:bg-white hover:border-red-500 hover:text-red-500 duration-200 rounded-xl text-white"
+                >
+                  Delete Store
+                </button>
+              </div>
+              <UModal v-model="showDeleteConfirmationModal">
+                <div class="p-4 flex items-center flex-col">
+                  <Icon
+                    name="clarity:info-solid"
+                    class="text-7xl text-yellow-500"
+                  />
+                  <p>Are you sure you want to delete this store?</p>
+                  <button
+                    @click="setLoading(deleteStore)"
+                    class="flex items-center gap-2 my-4 px-3 py-2 border border-transparent bg-green-500 hover:border-green-500 hover:bg-white hover:text-green-500 text-white rounded-xl"
+                  >
+                    <Icon
+                      name="line-md:loading-twotone-loop"
+                      v-if="loading.loading"
+                    />
+                    Delete Store
+                  </button>
+                  <p class="text-sm text-gray-500">
+                    note: this will delete products and its external information
+                    in the system
+                  </p>
+                </div>
+              </UModal>
             </div>
           </div>
           <hr class="mt-12" />

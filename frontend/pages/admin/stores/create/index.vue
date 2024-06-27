@@ -67,7 +67,7 @@ function clearAddress() {
 }
 async function getInfo(e: { latlng: { lat: number; long: number } }) {
   locationSelected.value = e.latlng;
-  await setLoading(reverseGeoLocation);
+  await setLoading(reverseGeoLocation, 0);
 }
 
 const formValidation = computed(() => {
@@ -105,8 +105,16 @@ async function createStore() {
         if (data) {
           const success = successStore();
           success.value.showSuccess = true;
-          success.value.message = "Store created successfully";
-          await navigateTo(`/admin/stores/${data.id}`);
+          success.value.message = "Store created successfully, redirecting...";
+          let countDown = 0;
+          let interval = setInterval(async () => {
+            countDown++;
+            if (countDown == 3) {
+              clearInterval(interval);
+              success.value.showSuccess = false;
+              await navigateTo(`/admin/stores/${data.id}`);
+            }
+          }, 1000);
         }
       })
       .catch((e) => {

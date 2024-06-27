@@ -10,6 +10,14 @@ const query = computed(() => {
     name: name.value,
   };
 });
+
+const debouncedSearch = debounce((txt: string) => (name.value = txt));
+
+function searchInputUpdate(e: Event) {
+  const text = (e.target as HTMLInputElement).value;
+  debouncedSearch(text);
+}
+
 const activeQuery = computed(() => {
   return { ...query.value };
 });
@@ -642,7 +650,7 @@ const selectedId = ref<number>(NaN);
             </span>
 
             <input
-              v-model="name"
+              @input="searchInputUpdate"
               type="text"
               placeholder="Search"
               class="block w-full py-1.5 pr-5 text-gray-700 bg-white border border-gray-200 rounded-lg md:w-80 placeholder-gray-400/70 pl-11 rtl:pr-11 rtl:pl-5"
