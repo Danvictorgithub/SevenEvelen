@@ -73,52 +73,73 @@ const loading = loadingStore();
           <h3 class="text-gray-700 uppercase text-lg">
             {{ product?.product.name }}
           </h3>
+          <div class="flex gap-2 items-center">
+            <img
+              :src="product?.product.brand.image"
+              class="h-12"
+              alt=""
+              @error="imageHandling"
+            />
+            <h4 class="text-gray-700">{{ product?.product.brand.name }}</h4>
+          </div>
           <span class="text-gray-500 mt-3"
             >₱{{ retailPrice(product as ProductType) }}</span
           >
           <hr class="my-3" />
-          <div class="mt-2">
-            <label class="text-gray-700 text-sm" for="count">Count:</label>
-            <div class="flex items-center mt-1">
-              <button
-                class="text-gray-500 focus:outline-none focus:text-gray-600"
-              >
-                <svg
-                  @click="increment"
-                  class="h-5 w-5"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+          <div class="flex items-center justify-between">
+            <div class="mt-2">
+              <label class="text-gray-700 text-sm" for="count">Count:</label>
+              <div class="flex items-center mt-1">
+                <button
+                  class="text-gray-500 focus:outline-none focus:text-gray-600"
                 >
-                  <path
-                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
-              </button>
-              <span class="text-gray-700 text-lg mx-2">{{ quantity }}</span>
-              <button
-                @click="decrement"
-                class="text-gray-500 focus:outline-none focus:text-gray-600"
-              >
-                <svg
-                  class="h-5 w-5"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  <svg
+                    @click="increment"
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                </button>
+                <span class="text-gray-700 text-lg mx-2">{{ quantity }}</span>
+                <button
+                  @click="decrement"
+                  class="text-gray-500 focus:outline-none focus:text-gray-600"
                 >
-                  <path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </button>
+                  <svg
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="mt-2 flex items-center">
+              <label class="text-gray-700 text-sm" for="count">Stock:</label>
+              <div class="">
+                <span class="text-gray-700 text-lg mx-2">{{
+                  product?.stock
+                }}</span>
+              </div>
             </div>
           </div>
-          <div>
-            <p class="text-base my-2 text-gray-700">
+
+          <div class="flex items-center gap-2 text-sm text-gray-700">
+            <p>Category:</p>
+            <p class="my-2">
               {{ product?.product.productType.name }}
             </p>
           </div>

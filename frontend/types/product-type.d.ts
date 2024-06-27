@@ -3,9 +3,12 @@ declare interface ProductType {
     markupRate: number;
     stock: number;
     store: {
+        id: number;
         name: string;
         image: string;
     };
+    storeId: number;
     product: VendorProductType
     userCart: number;
+    productsSold: number;
 }
