@@ -1,0 +1,1 @@
+export default () => useState<{ showSuccess: boolean, message: string }>('successStore', () => { return { showSuccess: false, message: "Operation Success" } });

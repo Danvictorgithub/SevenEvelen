@@ -18,7 +18,7 @@ async function logout() {
 }
 </script>
 <template>
-  <header class="border-b bg-white">
+  <header class="border-b bg-white z-[10000]">
     <div
       class="p-4 md:p-0 mx-auto container flex flex-col md:flex-row items-center justify-between"
     >
@@ -56,7 +56,7 @@ async function logout() {
         </button>
       </div>
       <div
-        class="flex gap-4 items-center text-2xl px-4 fixed md:static bottom-0 md:bottom-auto bg-white md:w-auto left-[5%] md:left-auto justify-between md:justify-normal p-4 border rounded-t-xl md:border-0 w-[90%]"
+        class="z-[10000] flex gap-4 items-center text-2xl px-4 fixed md:static bottom-0 md:bottom-auto bg-white md:w-auto left-[5%] md:left-auto justify-between md:justify-normal p-4 border rounded-t-xl md:border-0 w-[90%]"
       >
         <div class="block md:hidden">
           <Icon

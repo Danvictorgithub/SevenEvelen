@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-stone-100">
+  <footer class="bg-stone-100 z-[10000]">
     <div class="container p-6 mx-auto">
       <div class="lg:flex">
         <div class="w-full -mx-6 lg:w-2/5">

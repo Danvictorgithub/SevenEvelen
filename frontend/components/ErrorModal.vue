@@ -2,7 +2,7 @@
 const error = errorStore();
 </script>
 <template>
-  <UModal v-model="error.showError">
+  <UModal v-model="error.showError" class="z-[10000]">
     <div class="text-center p-4">
       <p>
         <Icon name="carbon:error-filled" class="text-7xl text-red-800" />

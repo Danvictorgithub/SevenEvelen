@@ -35,7 +35,6 @@ const { data: topStores } = await useFetch<StoreType[]>(`${API}/stats/store`, {
     Authorization: token.value as string,
   },
 });
-console.log(topStores.value);
 async function getMoreStore() {
   if (endFetch.value) {
     return;
@@ -139,7 +138,15 @@ useInfiniteScroll(el, await getMoreStore, { distance: 3000 });
                 stores
               </h1>
               <p>No: {{ storeCount }}</p>
+              <NuxtLink :to="`/admin/stores/create`">
+                <button
+                  class="border p-2 rounded-xl my-4 border-transparent bg-green-500 text-white font-medium hover:bg-white hover:border-green-500 hover:text-green-500 duration-200"
+                >
+                  Create Store
+                </button>
+              </NuxtLink>
             </div>
+
             <div class="relative flex items-center mt-4 md:mt-0">
               <span class="absolute">
                 <svg
